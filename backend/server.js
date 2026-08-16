@@ -6,3 +6,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT);
 // cors middleware added
 // dotenv loaded
+// POST /api/ai route skeleton
