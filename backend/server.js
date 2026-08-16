@@ -12,3 +12,4 @@ app.listen(PORT);
 // JSON mode support
 // Error handling
 // Modularized callGemini
+// Alias route /gemini
