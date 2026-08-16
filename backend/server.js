@@ -13,3 +13,4 @@ app.listen(PORT);
 // Error handling
 // Modularized callGemini
 // Alias route /gemini
+// Status and health check
