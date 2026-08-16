@@ -10,3 +10,4 @@ app.listen(PORT);
 // Input validation logic
 // Gemini API integration
 // JSON mode support
+// Error handling
