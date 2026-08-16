@@ -11,3 +11,4 @@ app.listen(PORT);
 // Gemini API integration
 // JSON mode support
 // Error handling
+// Modularized callGemini
