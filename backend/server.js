@@ -9,3 +9,4 @@ app.listen(PORT);
 // POST /api/ai route skeleton
 // Input validation logic
 // Gemini API integration
+// JSON mode support
