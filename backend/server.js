@@ -8,3 +8,4 @@ app.listen(PORT);
 // dotenv loaded
 // POST /api/ai route skeleton
 // Input validation logic
+// Gemini API integration
