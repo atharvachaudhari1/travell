@@ -15,3 +15,4 @@ app.listen(PORT);
 // Alias route /gemini
 // Status and health check
 // Groq API integration
+// cleanGroqResponse function
