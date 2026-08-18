@@ -18,3 +18,4 @@ app.listen(PORT);
 // cleanGroqResponse function
 // callGroqModel function
 // callGroqChain function
+// callAI smart router
