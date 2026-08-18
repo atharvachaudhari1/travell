@@ -14,3 +14,4 @@ app.listen(PORT);
 // Modularized callGemini
 // Alias route /gemini
 // Status and health check
+// Groq API integration
