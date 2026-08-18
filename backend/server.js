@@ -16,3 +16,4 @@ app.listen(PORT);
 // Status and health check
 // Groq API integration
 // cleanGroqResponse function
+// callGroqModel function
