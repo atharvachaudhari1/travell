@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive World Map</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+    --border: rgba(255,255,255,0.08); --text: #e6edf3; --text-muted: #8b949e;
+    --accent: #58a6ff; --radius: 10px;
+    --font: 'DM Sans', sans-serif; --font-display: 'DM Serif Display', serif;
+    --road-color: #58a6ff; --air-color: #f97316; --rail-color: #a78bfa;
+  }
+  html, body { height: 100%; width: 100%; overflow: hidden; background: var(--bg); font-family: var(--font); color: var(--text); }
+
+  #header {
+    position: absolute; top: 0; left: 0; right: 0; height: 52px;
+    background: rgba(13,17,23,0.93); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 16px; gap: 12px; z-index: 1000;
+  }
+  #header h1 { font-family: var(--font-display); font-size: 18px; font-weight: 400; white-space: nowrap; }
+
+  #search-wrap { flex: 1; max-width: 320px; position: relative; }
+  #search {
+    width: 100%; height: 34px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 0 12px 0 34px; color: var(--text);
+    font-family: var(--font); font-size: 13px; outline: none; transition: border-color 0.2s;
+  }
+  #search::placeholder { color: var(--text-muted); }
+  #search:focus { border-color: var(--accent); }
+  #search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
+  #search-results {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    display: none; z-index: 2000; max-height: 260px; overflow-y: auto;
+  }
+  .sr-item { padding: 9px 14px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); transition: background 0.12s; }
+  .sr-item:last-child { border-bottom: none; }
+  .sr-item:hover { background: var(--surface2); }
+  .sr-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: var(--surface2); color: var(--text-muted); margin-left: auto; white-space: nowrap; }
+
+  #legend {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 4px 10px; font-size: 11px; color: var(--text-muted); white-space: nowrap;
+  }
+  .leg-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .leg-line { width: 16px; height: 3px; border-radius: 2px; display: inline-block; flex-shrink: 0; }
+
+  #layer-toggle { display: flex; gap: 4px; background: var(--surface2); padding: 3px; border-radius: 8px; border: 1px solid var(--border); }
+  .layer-btn { padding: 4px 10px; border-radius: 5px; font-size: 12px; font-family: var(--font); color: var(--text-muted); background: none; border: none; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .layer-btn.active { background: var(--accent); color: #000; font-weight: 500; }
+  .layer-btn:hover:not(.active) { color: var(--text); }
+
+  #map { position: absolute; top: 52px; left: 0; right: 0; bottom: 0; }
+
+  #loading {
+    position: absolute; top: 52px; left: 0; right: 0; bottom: 0;
+    background: rgba(13,17,23,0.88); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; z-index: 800; gap: 16px;
+  }
+  .spinner { width: 38px; height: 38px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loading-msg { font-size: 13px; color: var(--text-muted); text-align: center; line-height: 1.6; }
+
+  #coords {
+    position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+    background: rgba(13,17,23,0.85); backdrop-filter: blur(8px);
+    border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px;
+    font-size: 11px; color: var(--text-muted); z-index: 900; pointer-events: none; letter-spacing: 0.4px;
+  }
+
+  /* Route status bar — replaces the old panel */
+  #route-status {
+    position: absolute; bottom: 38px; left: 50%; transform: translateX(-50%);
+    background: rgba(22,27,34,0.96); backdrop-filter: blur(16px);
+    border: 1px solid var(--border); border-radius: 24px;
+    padding: 7px 18px; z-index: 900;
+    display: none; align-items: center; gap: 14px;
+    white-space: nowrap; font-size: 12px;
+    animation: slideUp 0.25s ease;
+    max-width: calc(100vw - 32px); overflow: hidden;
+  }
+  #route-status.visible { display: flex; }
+  @keyframes slideUp { from { opacity:0; transform:translateX(-50%) translateY(8px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+  .rs-badge { padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 11px; flex-shrink: 0; }
+  .rs-badge.road  { background: rgba(88,166,255,0.15); color: var(--road-color); }
+  .rs-badge.air   { background: rgba(249,115,22,0.15); color: var(--air-color); }
+  .rs-badge.rail  { background: rgba(167,139,250,0.15); color: var(--rail-color); }
+  .rs-stat { display: flex; gap: 5px; align-items: center; }
+  .rs-label { color: var(--text-muted); }
+  .rs-value { font-weight: 600; color: var(--text); }
+  .rs-sep { color: var(--border); }
+  #rs-clear { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 0 2px; transition: color 0.15s; margin-left: 4px; }
+  #rs-clear:hover { color: #f78166; }
+
+  #info-panel {
+    position: absolute; bottom: 80px; right: 16px; width: 260px;
+    background: rgba(22,27,34,0.96); backdrop-filter: blur(16px);
+    border: 1px solid var(--border); border-radius: 14px; padding: 16px;
+    z-index: 900; display: none; animation: slideUp 0.2s ease;
+  }
+  #info-panel h2 { font-family: var(--font-display); font-size: 20px; font-weight: 400; margin-bottom: 2px; }
+  .info-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-top: 1px solid var(--border); font-size: 12px; }
+  .info-row .label { color: var(--text-muted); }
+  .info-row .value { color: var(--text); font-weight: 500; text-align: right; max-width: 150px; }
+  .info-links { display: flex; gap: 8px; margin-top: 12px; }
+  .info-link {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    gap: 5px; padding: 7px; border-radius: 8px; font-size: 12px;
+    font-family: var(--font); font-weight: 500; cursor: pointer; text-decoration: none;
+    transition: all 0.15s; border: 1px solid var(--border); background: var(--surface2); color: var(--text);
+  }
+  .info-link:hover { border-color: var(--accent); color: var(--accent); }
+  .info-link.primary { background: var(--accent); color: #000; border-color: var(--accent); }
+  .info-link.primary:hover { opacity: 0.88; }
+  #close-panel {
+    position: absolute; top: 12px; right: 12px; width: 24px; height: 24px;
+    border-radius: 50%; border: 1px solid var(--border); background: var(--surface2);
+    color: var(--text-muted); cursor: pointer; font-size: 13px;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  #close-panel:hover { color: var(--text); border-color: var(--text-muted); }
+
+  /* Leaflet */
+  .leaflet-control-zoom { border: 1px solid var(--border) !important; border-radius: var(--radius) !important; overflow: hidden; }
+  .leaflet-control-zoom a { background: rgba(22,27,34,0.92) !important; color: var(--text) !important; border-bottom: 1px solid var(--border) !important; width: 32px !important; height: 32px !important; line-height: 30px !important; font-size: 16px !important; transition: background 0.12s !important; }
+  .leaflet-control-zoom a:hover { background: var(--surface2) !important; }
+  .leaflet-control-attribution { background: rgba(13,17,23,0.7) !important; color: var(--text-muted) !important; font-size: 10px !important; }
+  .leaflet-control-attribution a { color: var(--accent) !important; }
+  .leaflet-popup-content-wrapper { background: var(--surface) !important; border: 1px solid var(--border) !important; border-radius: var(--radius) !important; color: var(--text) !important; }
+  .leaflet-popup-tip { background: var(--surface) !important; }
+
+  @media (max-width: 640px) {
+    #header h1, #legend { display: none; }
+    #info-panel { width: calc(100vw - 32px); right: 16px; }
+    .layer-btn { padding: 4px 7px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>🌍 World Map</h1>
+  <div id="search-wrap">
+    <span id="search-icon">🔍</span>
+    <input id="search" type="text" placeholder="Search cities, countries…" autocomplete="off" spellcheck="false">
+    <div id="search-results"></div>
+  </div>
+  <div id="legend">
+    <span class="leg-dot" style="background:#f78166"></span> Capitals
+    <span class="leg-dot" style="background:#58a6ff; margin-left:4px"></span> Cities
+    <span class="leg-dot" style="background:#a78bfa; margin-left:4px"></span> India
+    <span class="leg-line" style="background:var(--road-color); margin-left:4px"></span> Road
+    <span class="leg-line" style="background:var(--air-color);"></span> Air
+    <span class="leg-line" style="background:var(--rail-color);"></span> Rail
+  </div>
+  <div id="layer-toggle">
+    <button class="layer-btn active" data-layer="streets">Streets</button>
+    <button class="layer-btn" data-layer="satellite">Satellite</button>
+    <button class="layer-btn" data-layer="dark">Dark</button>
+  </div>
+</div>
+
+<div id="map"></div>
+<div id="loading"><div class="spinner"></div><p id="loading-msg">Loading city data…</p></div>
+<div id="coords">0.0000°, 0.0000° · zoom 3</div>
+
+<!-- Route status bar (no panel, just info strip) -->
+<div id="route-status">
+  <span class="rs-badge" id="rs-badge">🚗 Road</span>
+  <span class="rs-stat"><span class="rs-label">From</span>&nbsp;<span class="rs-value" id="rs-from">—</span></span>
+  <span class="rs-sep">→</span>
+  <span class="rs-stat"><span class="rs-value" id="rs-to">—</span></span>
+  <span class="rs-sep">·</span>
+  <span class="rs-stat"><span class="rs-label">Dist</span>&nbsp;<span class="rs-value" id="rs-dist">—</span></span>
+  <span class="rs-stat"><span class="rs-label">Time</span>&nbsp;<span class="rs-value" id="rs-time">—</span></span>
+  <button id="rs-clear" title="Clear route">✕</button>
+</div>
+
+<div id="info-panel">
+  <button id="close-panel">✕</button>
+  <h2 id="ip-name">—</h2>
+  <div class="info-subtitle" id="ip-sub"></div>
+  <div id="ip-rows"></div>
+  <div class="info-links" id="ip-links"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  function boot() {
+    if (typeof L === 'undefined') { setTimeout(boot, 50); return; }
+
+    const TILES = {
+      streets:   { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attr: '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors', maxZoom: 20 },
+      satellite: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attr: '© Esri', maxZoom: 19 },
+      dark:      { url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', attr: '© CARTO', maxZoom: 20 }
+    };
+
+    const map = L.map('map', { center: [20, 78], zoom: 4, zoomControl: true, minZoom: 2 });
+    map.zoomControl.setPosition('bottomright');
+    let currentTile = L.tileLayer(TILES.streets.url, { attribution: TILES.streets.attr, maxZoom: 19 }).addTo(map);
+
+    document.querySelectorAll('.layer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const t = TILES[btn.dataset.layer];
+        map.removeLayer(currentTile);
+        currentTile = L.tileLayer(t.url, { attribution: t.attr, maxZoom: t.maxZoom }).addTo(map);
+      });
+    });
+
+    const coordsEl = document.getElementById('coords');
+    map.on('mousemove', e => coordsEl.textContent = `${e.latlng.lat.toFixed(4)}°, ${e.latlng.lng.toFixed(4)}° · zoom ${map.getZoom()}`);
+    map.on('zoomend', () => { const c = map.getCenter(); coordsEl.textContent = `${c.lat.toFixed(4)}°, ${c.lng.toFixed(4)}° · zoom ${map.getZoom()}`; });
+
+    // Info panel
+    function showInfoPanel(name, subtitle, rows, lat, lng, wiki) {
+      document.getElementById('ip-name').textContent = name;
+      document.getElementById('ip-sub').textContent = subtitle;
+      document.getElementById('ip-rows').innerHTML = rows.map(r =>
+        `<div class="info-row"><span class="label">${r.l}</span><span class="value">${r.v}</span></div>`).join('');
+      const wUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(wiki || name.replace(/^[^\w]+\s*/, ''))}`;
+      document.getElementById('ip-links').innerHTML =
+        `<a class="info-link primary" href="${wUrl}" target="_blank">📖 Wikipedia</a>
+         <a class="info-link" href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank">🗺 Maps</a>`;
+      document.getElementById('info-panel').style.display = 'block';
+    }
+    document.getElementById('close-panel').onclick = () => { document.getElementById('info-panel').style.display = 'none'; };
+
+    const worldLayer = L.layerGroup().addTo(map);
+    const indiaLayer = L.layerGroup().addTo(map);
+    const routeLayer = L.layerGroup().addTo(map);
+
+    const searchIndex = [];
+
+    // General search
+    const searchInput = document.getElementById('search');
+    const resultsBox = document.getElementById('search-results');
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      if (q.length < 2) { resultsBox.style.display = 'none'; return; }
+      const hits = searchIndex.filter(c => c.name.toLowerCase().includes(q) || c.country.toLowerCase().includes(q)).slice(0, 12);
+      if (!hits.length) { resultsBox.style.display = 'none'; return; }
+      resultsBox.innerHTML = hits.map(c => `<div class="sr-item" data-i="${searchIndex.indexOf(c)}"><span>${c.flag}</span><span><strong>${c.name}</strong>, ${c.country}</span><span class="sr-tag">${c.tag}</span></div>`).join('');
+      resultsBox.style.display = 'block';
+    });
+    resultsBox.addEventListener('click', e => {
+      const item = e.target.closest('.sr-item');
+      if (!item) return;
+      const c = searchIndex[+item.dataset.i];
+      map.flyTo([c.lat, c.lng], 10, { duration: 1.4 });
+      searchInput.value = ''; resultsBox.style.display = 'none';
+      setTimeout(() => showInfoPanel(c.flag + ' ' + c.name, c.tag + ' · ' + c.country, c.infoRows, c.lat, c.lng, c.wiki), 700);
+    });
+    document.addEventListener('click', e => { if (!e.target.closest('#search-wrap')) resultsBox.style.display = 'none'; });
+
+    function fmtPop(n) {
+      if (!n || isNaN(n)) return 'N/A';
+      if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+      if (n >= 1e3) return Math.round(n / 1e3) + 'K';
+      return String(n);
+    }
+
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/);
+      const hdrs = lines[0].split(',').map(h => h.trim());
+      return lines.slice(1).map(line => {
+        const cols = line.match(/(".*?"|[^,]+|(?<=,)(?=,)|^(?=,)|(?<=,)$)/g) || line.split(',');
+        const obj = {};
+        hdrs.forEach((h, i) => { obj[h] = (cols[i] || '').replace(/^"|"$/g, '').trim(); });
+        return obj;
+      }).filter(r => r[hdrs[0]]);
+    }
+
+    function loadPlaceCSV() {
+      document.getElementById('loading-msg').textContent = 'Importing place.csv…';
+      return fetch('place.csv')
+        .then(r => { if (!r.ok) throw new Error('place.csv not found'); return r.text(); })
+        .then(text => {
+          const rows = parseCSV(text);
+          rows.forEach(row => {
+            const lat = parseFloat(row.lat), lng = parseFloat(row.lng), pop = parseInt(row.population) || 0;
+            if (isNaN(lat) || isNaN(lng) || !row.city_ascii) return;
+            const isPrimary = row.capital === 'primary', isAdmin = row.capital === 'admin';
+            const color = isPrimary ? '#f78166' : isAdmin ? '#58a6ff' : '#888';
+            const tag = isPrimary ? 'Capital' : isAdmin ? 'Admin' : 'City';
+            const minZ = pop > 10e6 ? 2 : pop > 3e6 ? 3 : pop > 1e6 ? 4 : pop > 300000 ? 5 : pop > 100000 ? 6 : 7;
+            const radius = pop > 10e6 ? 7 : pop > 3e6 ? 5 : pop > 1e6 ? 4 : pop > 300000 ? 3 : 2;
+            const infoRows = [{ l: 'Country', v: row.country }, { l: 'Population', v: fmtPop(pop) }, { l: 'Type', v: tag }, { l: 'Coordinates', v: `${lat.toFixed(4)}°, ${lng.toFixed(4)}°` }];
+            const entry = { name: row.city_ascii, country: row.country, lat, lng, flag: '🌐', tag, wiki: row.city_ascii, infoRows };
+            searchIndex.push(entry);
+            const m = L.circleMarker([lat, lng], { radius, fillColor: color, color: '#0d1117', weight: 0.6, fillOpacity: 0.88 });
+            m._minZoom = minZ;
+            m.bindTooltip(`<strong style="font-size:12px">${row.city_ascii}</strong><br><span style="color:#8b949e;font-size:11px">${row.country}${pop ? ' · ' + fmtPop(pop) : ''}</span>`, { sticky: true, offset: [6, 0] });
+            m.on('click', () => showInfoPanel('🌐 ' + row.city_ascii, tag + ' · ' + row.country, infoRows, lat, lng, row.city_ascii));
+            worldLayer.addLayer(m);
+          });
+        });
+    }
+
+    function loadIndiaCSV() {
+      return fetch('India.csv')
+        .then(r => { if (!r.ok) throw new Error('India.csv not found'); return r.text(); })
+        .then(text => {
+          const rows = parseCSV(text);
+          rows.forEach(row => {
+            const lat = parseFloat(row.Lat), lng = parseFloat(row.Long);
+            if (isNaN(lat) || isNaN(lng) || !row.City) return;
+            const infoRows = [{ l: 'State', v: row.State }, { l: 'Country', v: 'India' }, { l: 'Coordinates', v: `${lat.toFixed(4)}°, ${lng.toFixed(4)}°` }];
+            const entry = { name: row.City, country: 'India', state: row.State, lat, lng, flag: '🇮🇳', tag: 'India', wiki: row.City, infoRows };
+            searchIndex.push(entry);
+            const m = L.circleMarker([lat, lng], { radius: 4, fillColor: '#a78bfa', color: '#0d1117', weight: 0.6, fillOpacity: 0.9 });
+            m.bindTooltip(`<strong style="font-size:12px">🇮🇳 ${row.City}</strong><br><span style="color:#8b949e;font-size:11px">India · ${row.State}</span>`, { sticky: true, offset: [6, 0] });
+            m.on('click', () => showInfoPanel('🇮🇳 ' + row.City, 'City · India', infoRows, lat, lng, row.City));
+            indiaLayer.addLayer(m);
+          });
+        });
+    }
+
+    function updateVisibility() {
+      const z = map.getZoom();
+      worldLayer.eachLayer(m => { const el = m.getElement && m.getElement(); if (el) el.style.display = z >= (m._minZoom || 2) ? '' : 'none'; });
+      indiaLayer.eachLayer(m => { const el = m.getElement && m.getElement(); if (el) el.style.display = z >= 4 ? '' : 'none'; });
+    }
+    map.on('zoomend', updateVisibility);
+
+    // ── Load CSVs ──
+    let csvReady = false;
+    Promise.all([loadPlaceCSV(), loadIndiaCSV()])
+      .then(() => {
+        document.getElementById('loading').style.display = 'none';
+        updateVisibility();
+        csvReady = true;
+        // Process any queued route
+        if (window._pendingRoute) { processRoute(window._pendingRoute); window._pendingRoute = null; }
+      })
+      .catch(err => {
+        document.getElementById('loading-msg').innerHTML =
+          `<span style="color:#f78166;font-size:14px">⚠ ${err.message}</span><br><br>` +
+          `<span style="color:#8b949e;font-size:12px">Keep <strong>place.csv</strong> and <strong>India.csv</strong> in the same folder as map.html</span>`;
+        csvReady = true;
+        if (window._pendingRoute) { processRoute(window._pendingRoute); window._pendingRoute = null; }
+      });
+
+    // ═══════════════════════════════════════════════════════
+    //  SOLOME ROUTE ENGINE — driven by postMessage / API
+    // ═══════════════════════════════════════════════════════
+
+    let animFrameId = null;
+
+    function haversine(lat1, lng1, lat2, lng2) {
+      const R = 6371, r = Math.PI / 180;
+      const dLat = (lat2 - lat1) * r, dLng = (lng2 - lng1) * r;
+      const a = Math.sin(dLat/2)**2 + Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dLng/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function gcPoints(lat1, lng1, lat2, lng2, n) {
+      const toR = d => d * Math.PI/180, toD = r => r * 180/Math.PI;
+      const φ1=toR(lat1), λ1=toR(lng1), φ2=toR(lat2), λ2=toR(lng2);
+      const d = 2*Math.asin(Math.sqrt(Math.sin((φ2-φ1)/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin((λ2-λ1)/2)**2));
+      return Array.from({length:n+1},(_,i)=>{
+        const f=i/n;
+        if(d<1e-4) return [lat1,lng1];
+        const A=Math.sin((1-f)*d)/Math.sin(d), B=Math.sin(f*d)/Math.sin(d);
+        const x=A*Math.cos(φ1)*Math.cos(λ1)+B*Math.cos(φ2)*Math.cos(λ2);
+        const y=A*Math.cos(φ1)*Math.sin(λ1)+B*Math.cos(φ2)*Math.sin(λ2);
+        const z=A*Math.sin(φ1)+B*Math.sin(φ2);
+        return [toD(Math.atan2(z,Math.sqrt(x*x+y*y))),toD(Math.atan2(y,x))];
+      });
+    }
+
+    function pinIcon(color, label) {
+      return L.divIcon({
+        className: '',
+        html: `<svg width="22" height="30" viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11 0C4.9 0 0 4.9 0 11c0 8.3 11 19 11 19s11-10.7 11-19C22 4.9 17.1 0 11 0z" fill="${color}"/>
+          <circle cx="11" cy="11" r="5" fill="white" opacity="0.9"/>
+        </svg>${label ? `<div style="position:absolute;top:32px;left:50%;transform:translateX(-50%);white-space:nowrap;background:rgba(13,17,23,0.9);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);">${label}</div>` : ''}`,
+        iconSize: [22, 30], iconAnchor: [11, 30], popupAnchor: [0, -34]
+      });
+    }
+
+    function fmtDur(secs) {
+      if (!secs) return '—';
+      const h = Math.floor(secs/3600), m = Math.floor((secs%3600)/60);
+      if (h===0) return `${m} min`;
+      if (m===0) return `${h} hr`;
+      return `${h} hr ${m} min`;
+    }
+
+    function clearRoute() {
+      if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = null; }
+      routeLayer.clearLayers();
+      document.getElementById('route-status').classList.remove('visible');
+    }
+    document.getElementById('rs-clear').onclick = clearRoute;
+
+    function showStatus(mode, from, to, distKm, durSecs, airport) {
+      const badges = { road:'🚗 Road', air:'✈️ Airways', rail:'🚂 Railway' };
+      const modeClass = { road:'road', air:'air', rail:'rail' };
+      const badge = document.getElementById('rs-badge');
+      badge.textContent = badges[mode] || mode;
+      badge.className = 'rs-badge ' + (modeClass[mode] || 'road');
+      document.getElementById('rs-from').textContent = airport?.from || from;
+      document.getElementById('rs-to').textContent = airport?.to || to;
+      document.getElementById('rs-dist').textContent = distKm ? Math.round(distKm).toLocaleString()+' km' : '—';
+      document.getElementById('rs-time').textContent = fmtDur(durSecs);
+      document.getElementById('route-status').classList.add('visible');
+    }
+
+    // ── Geocode a city name (search index first, then Nominatim API) ──
+    async function geocodeCity(name) {
+      if (!name) return null;
+      const q = name.trim().toLowerCase();
+      // Try local index first
+      const local = searchIndex.find(c =>
+        c.name.toLowerCase() === q ||
+        (c.name.toLowerCase() + ', ' + c.country.toLowerCase()) === q ||
+        c.name.toLowerCase().includes(q.split(',')[0].trim())
+      );
+      if (local) return local;
+      // Fallback to Nominatim
+      try {
+        const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(name)}&limit=1`);
+        const data = await resp.json();
+        if (data[0]) return { name: data[0].display_name.split(',')[0], country: data[0].display_name.split(',').slice(-1)[0].trim(), lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), flag: '🌐', tag: 'City' };
+      } catch(_) {}
+      return null;
+    }
+
+    // ── Road route via OSRM ──
+    async function drawRoadRoute(src, dst, label) {
+      const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${src.lng},${src.lat};${dst.lng},${dst.lat}?overview=full&geometries=geojson`;
+      let routeData = null;
+      try {
+        const resp = await fetch(osrmUrl);
+        if (!resp.ok) throw new Error();
+        const json = await resp.json();
+        if (json.code==='Ok' && json.routes?.length) routeData = json.routes[0];
+      } catch(_) {}
+
+      L.marker([src.lat,src.lng],{icon:pinIcon('#22c55e',src.name)}).addTo(routeLayer).bindPopup(`<strong>🟢 ${src.name}</strong>`);
+      L.marker([dst.lat,dst.lng],{icon:pinIcon('#f78166',dst.name)}).addTo(routeLayer).bindPopup(`<strong>🔴 ${dst.name}</strong>`);
+
+      let distKm, durSecs;
+      if (routeData) {
+        const coords = routeData.geometry.coordinates.map(c => [c[1],c[0]]);
+        L.polyline(coords,{color:'#000',weight:10,opacity:0.18,lineJoin:'round',lineCap:'round'}).addTo(routeLayer).bringToBack();
+        L.polyline(coords,{color:'#58a6ff',weight:9,opacity:0.22,lineJoin:'round',lineCap:'round'}).addTo(routeLayer);
+        L.polyline(coords,{color:'#58a6ff',weight:4,opacity:1,lineJoin:'round',lineCap:'round'}).addTo(routeLayer);
+        L.polyline(coords,{color:'#fff',weight:1.5,opacity:0.35,lineJoin:'round',lineCap:'round'}).addTo(routeLayer);
+        distKm = routeData.distance/1000; durSecs = routeData.duration;
+        map.flyToBounds(L.polyline(coords).getBounds(),{padding:[60,60],duration:1.3});
+      } else {
+        const pts = [[src.lat,src.lng],[dst.lat,dst.lng]];
+        L.polyline(pts,{color:'#58a6ff',weight:4,opacity:0.85,dashArray:'10 6'}).addTo(routeLayer);
+        distKm = haversine(src.lat,src.lng,dst.lat,dst.lng); durSecs = (distKm/80)*3600;
+        map.flyToBounds(L.latLngBounds(pts),{padding:[60,60],duration:1.3});
+      }
+      showStatus('road', src.name, dst.name, distKm, durSecs);
+    }
+
+    // ── Air route (great-circle arc + animation) ──
+    async function drawAirRoute(src, dst, fromAirport, toAirport) {
+      const pts = gcPoints(src.lat,src.lng,dst.lat,dst.lng,120);
+      L.polyline(pts,{color:'#000',weight:10,opacity:0.15,lineJoin:'round'}).addTo(routeLayer).bringToBack();
+      L.polyline(pts,{color:'#f97316',weight:10,opacity:0.15,lineJoin:'round'}).addTo(routeLayer);
+      const mainLine = L.polyline(pts,{color:'#f97316',weight:3,opacity:1,dashArray:'14 7',lineJoin:'round'}).addTo(routeLayer);
+      const animLine = L.polyline(pts,{color:'#fff',weight:2,opacity:0.8,dashArray:'3 60',dashOffset:'0',lineJoin:'round'}).addTo(routeLayer);
+
+      let offset=0;
+      function animate(){
+        offset=(offset+0.8)%63;
+        const el=animLine.getElement?.();
+        if(el) el.setAttribute('stroke-dashoffset',-offset);
+        animFrameId=requestAnimationFrame(animate);
+      }
+      animFrameId=requestAnimationFrame(animate);
+
+      // Airport labels in popups
+      const srcLabel = fromAirport ? `✈️ ${fromAirport}` : `✈️ ${src.name}`;
+      const dstLabel = toAirport   ? `🛬 ${toAirport}`  : `🛬 ${dst.name}`;
+      L.marker([src.lat,src.lng],{icon:pinIcon('#22c55e',fromAirport||src.name)}).addTo(routeLayer).bindPopup(`<strong>${srcLabel}</strong><br><span style="font-size:11px;color:#8b949e">${src.name}</span>`).openPopup();
+      L.marker([dst.lat,dst.lng],{icon:pinIcon('#f78166',toAirport||dst.name)}).addTo(routeLayer).bindPopup(`<strong>${dstLabel}</strong><br><span style="font-size:11px;color:#8b949e">${dst.name}</span>`);
+
+      // Plane icon at midpoint
+      const mid=pts[Math.floor(pts.length/2)];
+      const p1=pts[Math.floor(pts.length/2)-2], p2=pts[Math.floor(pts.length/2)+2];
+      const bearing=Math.atan2(p2[1]-p1[1],p2[0]-p1[0])*180/Math.PI-45;
+      L.marker(mid,{icon:L.divIcon({className:'',html:`<div style="font-size:20px;transform:rotate(${bearing}deg);filter:drop-shadow(0 1px 4px rgba(0,0,0,0.7))">✈️</div>`,iconSize:[28,28],iconAnchor:[14,14]})}).addTo(routeLayer);
+
+      const distKm=haversine(src.lat,src.lng,dst.lat,dst.lng);
+      const flightSecs=(distKm/850)*3600;
+      map.flyToBounds(mainLine.getBounds(),{padding:[80,80],duration:1.5});
+      showStatus('air', src.name, dst.name, distKm, flightSecs, {from:fromAirport||src.name, to:toAirport||dst.name});
+    }
+
+    // ── Rail route (displacement: straight dashed line) ──
+    async function drawRailRoute(src, dst) {
+      const pts = [[src.lat,src.lng],[dst.lat,dst.lng]];
+      L.polyline(pts,{color:'#000',weight:8,opacity:0.15}).addTo(routeLayer).bringToBack();
+      L.polyline(pts,{color:'#a78bfa',weight:6,opacity:0.2}).addTo(routeLayer);
+      L.polyline(pts,{color:'#a78bfa',weight:3,opacity:1,dashArray:'12 6',lineJoin:'round',lineCap:'round'}).addTo(routeLayer);
+
+      L.marker([src.lat,src.lng],{icon:pinIcon('#22c55e',src.name)}).addTo(routeLayer).bindPopup(`<strong>🚂 ${src.name}</strong>`).openPopup();
+      L.marker([dst.lat,dst.lng],{icon:pinIcon('#f78166',dst.name)}).addTo(routeLayer).bindPopup(`<strong>🏁 ${dst.name}</strong>`);
+
+      const distKm=haversine(src.lat,src.lng,dst.lat,dst.lng);
+      const trainSecs=(distKm/120)*3600;
+      map.flyToBounds(L.latLngBounds(pts),{padding:[70,70],duration:1.3});
+      showStatus('rail', src.name, dst.name, distKm, trainSecs);
+    }
+
+    // ── Process a single leg ──
+    async function processLeg(leg) {
+      const src = await geocodeCity(leg.from);
+      const dst = await geocodeCity(leg.to);
+      if (!src || !dst) {
+        console.warn('[SOLOME Map] Could not geocode:', leg.from, '→', leg.to);
+        return;
+      }
+      const mode = (leg.transport || 'train').toLowerCase();
+      if (mode === 'airways' || mode === 'fly' || mode === 'air' || mode === 'flight') {
+        await drawAirRoute(src, dst, leg.fromAirport || '', leg.toAirport || '');
+      } else if (mode === 'road' || mode === 'cab' || mode === 'bus' || mode === 'roadways') {
+        await drawRoadRoute(src, dst);
+      } else {
+        // train / rail / ship / default → displacement line
+        await drawRailRoute(src, dst);
+      }
+    }
+
+    // ── Process all legs in a SOLOME_ROUTE message ──
+    async function processRoute(msg) {
+      clearRoute();
+      const legs = msg.legs || [];
+      if (!legs.length) return;
+      // For now draw the first leg (primary route); multi-leg support iterates all
+      for (let i = 0; i < legs.length; i++) {
+        await processLeg(legs[i]);
+        if (i < legs.length - 1) await new Promise(r => setTimeout(r, 500));
+      }
+    }
+
+    // ── Listen for postMessage from om.html ──
+    window.addEventListener('message', e => {
+      if (!e.data || e.data.type !== 'SOLOME_ROUTE') return;
+      if (!csvReady) { window._pendingRoute = e.data; return; }
+      processRoute(e.data);
+    });
+
+    // Notify parent that map is ready
+    try { window.parent.postMessage({ type: 'SOLOME_MAP_READY' }, '*'); } catch(_) {}
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>
