@@ -1,5 +1,5 @@
-// ══════════════════════════════════════════════════════════════
-// SOLOME AI Proxy — Dual-Model Backend
+﻿// ══════════════════════════════════════════════════════════════
+// ARKA AI Proxy — Dual-Model Backend
 // Gemini primary → Groq fallback chain (3 models) on 429/503
 // Keys live ONLY here in env vars. Browser never sees them.
 // ══════════════════════════════════════════════════════════════

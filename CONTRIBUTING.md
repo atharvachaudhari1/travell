@@ -1,3 +1,3 @@
-﻿# Contributing to SOLOME
+﻿# Contributing to ARKA
 
 Please follow standard git workflow.

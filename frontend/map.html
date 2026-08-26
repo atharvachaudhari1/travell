@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -352,7 +352,7 @@
       });
 
     // ═══════════════════════════════════════════════════════
-    //  SOLOME ROUTE ENGINE — driven by postMessage / API
+    //  ARKA ROUTE ENGINE — driven by postMessage / API
     // ═══════════════════════════════════════════════════════
 
     let animFrameId = null;
@@ -526,7 +526,7 @@
       const src = await geocodeCity(leg.from);
       const dst = await geocodeCity(leg.to);
       if (!src || !dst) {
-        console.warn('[SOLOME Map] Could not geocode:', leg.from, '→', leg.to);
+        console.warn('[ARKA Map] Could not geocode:', leg.from, '→', leg.to);
         return;
       }
       const mode = (leg.transport || 'train').toLowerCase();
@@ -540,7 +540,7 @@
       }
     }
 
-    // ── Process all legs in a SOLOME_ROUTE message ──
+    // ── Process all legs in a ARKA_ROUTE message ──
     async function processRoute(msg) {
       clearRoute();
       const legs = msg.legs || [];
@@ -554,13 +554,13 @@
 
     // ── Listen for postMessage from om.html ──
     window.addEventListener('message', e => {
-      if (!e.data || e.data.type !== 'SOLOME_ROUTE') return;
+      if (!e.data || e.data.type !== 'ARKA_ROUTE') return;
       if (!csvReady) { window._pendingRoute = e.data; return; }
       processRoute(e.data);
     });
 
     // Notify parent that map is ready
-    try { window.parent.postMessage({ type: 'SOLOME_MAP_READY' }, '*'); } catch(_) {}
+    try { window.parent.postMessage({ type: 'ARKA_MAP_READY' }, '*'); } catch(_) {}
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

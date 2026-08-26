@@ -1,4 +1,4 @@
-﻿# SOLOME — AI Travel Planner ✈️
+﻿# ARKA — AI Travel Planner ✈️
 
 Solo travel planning powered by Google Gemini AI + Groq fallback.
 

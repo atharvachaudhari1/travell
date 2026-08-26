@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -948,7 +948,7 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
       <div class="login-logo-icon">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
       </div>
-      <div class="login-brand-name">SOLOME</div>
+      <div class="login-brand-name">ARKA</div>
     </div>
     <div class="login-tagline">WHERE EVERY SOLO JOURNEY BEGINS.</div>
 
@@ -987,13 +987,13 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
         <span class="login-btn-inner"><span>✈️</span><span id="signin-btn-txt">Sign In</span></span>
       </button>
       <div style="text-align:center;margin-top:18px;font-size:13px;color:rgba(255,255,255,0.38);">
-        New to SOLOME? <a onclick="authSwitchMode('signup')" style="color:#4f8ef7;font-weight:600;cursor:pointer;text-decoration:none;">Create a free account →</a>
+        New to ARKA? <a onclick="authSwitchMode('signup')" style="color:#4f8ef7;font-weight:600;cursor:pointer;text-decoration:none;">Create a free account →</a>
       </div>
     </div>
 
     <!-- ── CREATE ACCOUNT FORM ── -->
     <div id="form-signup" style="display:none;">
-      <div class="login-heading">Join SOLOME</div>
+      <div class="login-heading">Join ARKA</div>
       <div class="login-subhead">Create your free traveler account</div>
       <div class="login-field">
         <label class="login-label">Your Name <span style="opacity:.45;font-weight:400;">(shown in app)</span></label>
@@ -1052,7 +1052,7 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
     <div class="nav-logo-icon">
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
     </div>
-    <span class="nav-brand">SOLOME</span>
+    <span class="nav-brand">ARKA</span>
   </div>
   <div class="nav-links">
     <button class="nav-link" id="nav-planner" onclick="showPage('planner')">✈️ Planner</button>
@@ -1422,7 +1422,7 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
     </div>
     <div id="tm-result" class="hidden">
       <div id="tm-info-cards" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;"></div>
-      <div class="card mb-4"><div class="flex items-center justify-between mb-3"><div class="font-600 text-sm">🗺️ Route Map</div><span class="text-xs text-muted">SOLOME Maps</span></div><div id="tm-map" style="width:100%;height:300px;border-radius:12px;overflow:hidden;border:1px solid var(--border);"></div></div>
+      <div class="card mb-4"><div class="flex items-center justify-between mb-3"><div class="font-600 text-sm">🗺️ Route Map</div><span class="text-xs text-muted">ARKA Maps</span></div><div id="tm-map" style="width:100%;height:300px;border-radius:12px;overflow:hidden;border:1px solid var(--border);"></div></div>
       <div id="tm-fare-card" class="card"></div>
     </div>
   </div>
@@ -1884,8 +1884,8 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
     ctx.restore();
   }
 
-  // SOLOME title reveal after first orbit
-  function drawSolome(){
+  // ARKA title reveal after first orbit
+  function drawARKA(){
     if(nameAlpha <= 0) return;
     ctx.save();
 
@@ -1941,17 +1941,17 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
     ctx.shadowColor  = 'rgba(79,142,247,1)';
     ctx.shadowBlur   = 55;
     ctx.fillStyle    = 'rgba(79,142,247,0.3)';
-    ctx.fillText('SOLOME', 0, -fs*0.10);
+    ctx.fillText('ARKA', 0, -fs*0.10);
 
     // Main white text
     ctx.shadowBlur = 28;
     ctx.shadowColor = 'rgba(100,165,255,0.9)';
     ctx.fillStyle   = '#ffffff';
-    ctx.fillText('SOLOME', 0, -fs*0.10);
+    ctx.fillText('ARKA', 0, -fs*0.10);
 
     // Inner crisp pass
     ctx.shadowBlur = 8;
-    ctx.fillText('SOLOME', 0, -fs*0.10);
+    ctx.fillText('ARKA', 0, -fs*0.10);
 
     // Tagline
     ctx.font = `400 ${fs*0.165}px 'DM Sans', sans-serif`;
@@ -1984,7 +1984,7 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
     const revCount = elapsed / PERIOD;
     const angle    = (revCount % 1) * Math.PI * 2;
 
-    // Trigger SOLOME reveal after exactly 1 full orbit
+    // Trigger ARKA reveal after exactly 1 full orbit
     if(revCount >= 1 && !revDone) revDone = true;
 
     if(revDone){
@@ -2014,8 +2014,8 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
     // ⑤ Plane (only when in front of earth)
     drawPlane(angle);
 
-    // ⑥ SOLOME reveal
-    drawSolome();
+    // ⑥ ARKA reveal
+    drawARKA();
 
     // Progress bar + label
     const prog = Math.min(1, revCount);
@@ -2070,8 +2070,8 @@ function showLoginScreen(){
 //   ACCOUNT SYSTEM — localStorage-based, per-user data isolation
 // ╚══════════════════════════════════════════════════════════════╝
 
-const AUTH_KEY = 'solome_accounts_v1';   // stores all accounts
-const SESSION_KEY = 'solome_session_v1'; // stores active username
+const AUTH_KEY = 'ARKA_accounts_v1';   // stores all accounts
+const SESSION_KEY = 'ARKA_session_v1'; // stores active username
 
 function authGetAccounts(){
   try{ return JSON.parse(localStorage.getItem(AUTH_KEY) || '{}'); }catch{ return {}; }
@@ -2090,7 +2090,7 @@ function authClearSession(){
 }
 
 // Per-user data keys
-function authUserDataKey(username){ return 'solome_data_' + username; }
+function authUserDataKey(username){ return 'ARKA_data_' + username; }
 function authLoadUserData(username){
   try{ return JSON.parse(localStorage.getItem(authUserDataKey(username)) || 'null'); }catch{ return null; }
 }
@@ -2231,7 +2231,7 @@ function doSignUp(){
       document.getElementById('su-username').value = '';
       document.getElementById('su-password').value = '';
       enterApp(username, name);
-      if(typeof toast === 'function') toast('🎉 Welcome to SOLOME, ' + name + '!');
+      if(typeof toast === 'function') toast('🎉 Welcome to ARKA, ' + name + '!');
     }, 700);
   }, 900);
 }
@@ -2274,7 +2274,7 @@ function enterApp(username, name){
   // ── Reload per-user Timeline data ──
   // The TL IIFE ran at page-parse using the old key; now reload with the correct user key
   try {
-    var tlKey = 'solome_tl_user_' + username;
+    var tlKey = 'ARKA_tl_user_' + username;
     var tlSaved = JSON.parse(localStorage.getItem(tlKey) || 'null');
     if(tlSaved && typeof tlSaved === 'object' && window._TL){
       var TLref = window._TL;
@@ -2352,7 +2352,7 @@ function authConfirmDelete(){
   delete accounts[session];
   authSaveAccounts(accounts);
   try{ localStorage.removeItem(authUserDataKey(session)); }catch{}
-  try{ localStorage.removeItem('solome_tl3'); }catch{}
+  try{ localStorage.removeItem('ARKA_tl3'); }catch{}
 
   const ov = document.getElementById('del-account-overlay');
   if(ov) ov.style.display = 'none';
@@ -2407,12 +2407,12 @@ const TRANSPORT_EMOJI={train:'🚂',airways:'✈️',bus:'🚌',ship:'🚢',bike
 
 function fmtCurrency(n,cur){cur=cur||state.currency;try{return new Intl.NumberFormat('en-IN',{style:'currency',currency:cur,minimumFractionDigits:0,maximumFractionDigits:0}).format(n);}catch{return cur+' '+Math.round(n);}}
 function fmtDate(dateStr){if(!dateStr)return '';try{const d=new Date(dateStr);return d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch{return dateStr;}}
-function saveState(){try{localStorage.setItem('solome',JSON.stringify({plan:state.plan,expenses:state.expenses,totalBudget:state.totalBudget,currency:state.currency,tripInput:state.tripInput,dark:state.dark,transportMode:state.transportMode}));const session=authGetSession();if(session)authSaveUserData(session,{plan:state.plan,expenses:state.expenses,totalBudget:state.totalBudget,currency:state.currency,tripInput:state.tripInput,dark:state.dark,transportMode:state.transportMode});}catch{}}
+function saveState(){try{localStorage.setItem('ARKA',JSON.stringify({plan:state.plan,expenses:state.expenses,totalBudget:state.totalBudget,currency:state.currency,tripInput:state.tripInput,dark:state.dark,transportMode:state.transportMode}));const session=authGetSession();if(session)authSaveUserData(session,{plan:state.plan,expenses:state.expenses,totalBudget:state.totalBudget,currency:state.currency,tripInput:state.tripInput,dark:state.dark,transportMode:state.transportMode});}catch{}}
 function loadState(){
   try{
     // Only load if no per-user session (legacy fallback)
     const session=authGetSession();
-    const s=session?{}:JSON.parse(localStorage.getItem('solome')||'{}');
+    const s=session?{}:JSON.parse(localStorage.getItem('ARKA')||'{}');
     if(s.plan)state.plan=s.plan;
     if(s.expenses)state.expenses=s.expenses;
     if(s.totalBudget)state.totalBudget=s.totalBudget;
@@ -2637,7 +2637,7 @@ function clearTrip(){if(!confirm('Clear your current trip plan?'))return;state.p
 function exportPlan(){ /* Export removed from planner section */ }
 function addDays(n){if(!state.plan)return;updatePlanWithChanges({duration:(state.tripInput?.duration||state.plan.totalDays)+n},'');}
 
-async function updatePlanWithChanges(changes,note){if(state.isGenerating)return;state.isGenerating=true;showLoading('Updating your itinerary…');try{const raw=await callGemini(`You are SOLOME AI. Update this travel itinerary.\nExisting plan: ${JSON.stringify(state.plan)}\nChanges: ${JSON.stringify(changes)}\nNote: ${note||'None'}\nReturn ONLY valid JSON with same structure.`);state.plan=parseJSON(raw);saveState();renderPlan();toast('✅ Plan updated!');}catch(e){toast(e.message||'Update failed','error');}finally{state.isGenerating=false;}}
+async function updatePlanWithChanges(changes,note){if(state.isGenerating)return;state.isGenerating=true;showLoading('Updating your itinerary…');try{const raw=await callGemini(`You are ARKA AI. Update this travel itinerary.\nExisting plan: ${JSON.stringify(state.plan)}\nChanges: ${JSON.stringify(changes)}\nNote: ${note||'None'}\nReturn ONLY valid JSON with same structure.`);state.plan=parseJSON(raw);saveState();renderPlan();toast('✅ Plan updated!');}catch(e){toast(e.message||'Update failed','error');}finally{state.isGenerating=false;}}
 
 async function generatePlan(){
   const source=document.getElementById('f-source').value.trim();
@@ -3110,7 +3110,7 @@ function mcBuildPrompt() {
   var numDests = destSegs.length; // number of cities to build itineraries for
   var totalDays = destSegs.reduce(function(sum,s){ return sum + (s.days||3); }, 0);
 
-  var prompt = 'You are SOLOME, a travel planner AI.\n\n'
+  var prompt = 'You are ARKA, a travel planner AI.\n\n'
     + 'TRIP OVERVIEW:\n'
     + '- Source (departure only, NO itinerary): ' + sourceCity + '\n'
     + '- Destinations (generate itinerary for each): ' + destSegs.map(function(s){ return s.city; }).join(', ') + '\n'
@@ -3613,13 +3613,13 @@ window.updatePlan = async function() {
 };
 
 /* ── Multi-city route map — iframe bridge to map.html ── */
-/* Sends SOLOME_ROUTE postMessage to the embedded map.html iframe */
+/* Sends ARKA_ROUTE postMessage to the embedded map.html iframe */
 
 function mcGetOrCreateIframe(mapEl) {
-  let iframe = mapEl.querySelector('iframe.solome-map-frame');
+  let iframe = mapEl.querySelector('iframe.ARKA-map-frame');
   if (!iframe) {
     iframe = document.createElement('iframe');
-    iframe.className = 'solome-map-frame';
+    iframe.className = 'ARKA-map-frame';
     iframe.src = 'map.html';
     iframe.style.cssText = 'width:100%;height:100%;border:none;border-radius:14px;display:block;';
     iframe.allow = 'geolocation';
@@ -3632,15 +3632,15 @@ function mcGetOrCreateIframe(mapEl) {
 function mcSendRouteToMap(iframe, legs, sourceCity) {
   // Send postMessage once map.html is ready (wait for load if needed)
   function send() {
-    iframe.contentWindow.postMessage({ type: 'SOLOME_ROUTE', legs: legs, sourceCity: sourceCity }, '*');
+    iframe.contentWindow.postMessage({ type: 'ARKA_ROUTE', legs: legs, sourceCity: sourceCity }, '*');
   }
   if (iframe._mapReady) {
     // Add small delay to ensure map.html has processed CSVs
     setTimeout(send, 300);
   } else {
-    // Listen for SOLOME_MAP_READY from the iframe
+    // Listen for ARKA_MAP_READY from the iframe
     function onMapReady(e) {
-      if (e.data && e.data.type === 'SOLOME_MAP_READY' && e.source === iframe.contentWindow) {
+      if (e.data && e.data.type === 'ARKA_MAP_READY' && e.source === iframe.contentWindow) {
         iframe._mapReady = true;
         window.removeEventListener('message', onMapReady);
         setTimeout(send, 800);
@@ -4619,10 +4619,10 @@ var TL = {
 
 /* ── Per-user storage helpers (accessible outside IIFE via window) ── */
 function tlGetUsername(){
-  try{ var s=localStorage.getItem('solome_session_v1'); return s?JSON.parse(s):null; }catch(e){ return null; }
+  try{ var s=localStorage.getItem('ARKA_session_v1'); return s?JSON.parse(s):null; }catch(e){ return null; }
 }
 function tlGetStorageKey(){
-  var u=tlGetUsername(); return u ? 'solome_tl_user_'+u : 'solome_tl3';
+  var u=tlGetUsername(); return u ? 'ARKA_tl_user_'+u : 'ARKA_tl3';
 }
 
 /* Expose TL object and key getter for the map modal IIFE */
@@ -4633,7 +4633,7 @@ window._tlUsername = tlGetUsername;
 /* Restore from per-user key, fallback to shared key */
 try {
   var _tlKey = tlGetStorageKey();
-  var _saved = JSON.parse(localStorage.getItem(_tlKey) || localStorage.getItem('solome_tl3') || 'null');
+  var _saved = JSON.parse(localStorage.getItem(_tlKey) || localStorage.getItem('ARKA_tl3') || 'null');
   if(_saved && typeof _saved === 'object'){
     if(_saved.mood)        TL.mood        = _saved.mood;
     if(_saved.destination) TL.destination = _saved.destination;
@@ -4659,7 +4659,7 @@ function save(){
     var key = tlGetStorageKey();
     localStorage.setItem(key, data);
     /* Also always write to legacy shared key so readTL() in map IIFE works */
-    localStorage.setItem('solome_tl3', data);
+    localStorage.setItem('ARKA_tl3', data);
   }catch(e){}
 }
 function gradFor(idx){
@@ -4899,7 +4899,7 @@ window.tlUpdateDestination = function(val, silent){
   var tagEl = document.getElementById('tl-dest-tagline');
   if(tagEl){
     if(TL.destination){
-      tagEl.textContent = 'Your journey to ' + TL.destination + ' with SOLOME.';
+      tagEl.textContent = 'Your journey to ' + TL.destination + ' with ARKA.';
       tagEl.style.display = 'block';
     } else {
       tagEl.style.display = 'none';
@@ -5023,7 +5023,7 @@ var _currentQuery   = '';
 var MAX_HISTORY = 6;
 function historyKey(){
   var u = (typeof window._tlUsername==='function') ? window._tlUsername() : null;
-  return u ? 'solome_maphist_'+u : 'solome_maphist';
+  return u ? 'ARKA_maphist_'+u : 'ARKA_maphist';
 }
 function loadHistory(){
   try{ return JSON.parse(localStorage.getItem(historyKey())||'[]'); }catch(e){ return []; }
@@ -5043,7 +5043,7 @@ function readTL(){
   /* Use live in-memory TL state first; fall back to localStorage */
   if(window._TL && Array.isArray(window._TL.days)) return window._TL;
   try{
-    var key = (typeof window._tlGetKey==='function') ? window._tlGetKey() : 'solome_tl3';
+    var key = (typeof window._tlGetKey==='function') ? window._tlGetKey() : 'ARKA_tl3';
     return JSON.parse(localStorage.getItem(key)||'null') || {days:[]};
   }catch(e){ return {days:[]}; }
 }
@@ -5059,9 +5059,9 @@ function writeTL(tl){
   /* Persist to user-specific and legacy keys */
   try{
     var data = JSON.stringify(window._TL||tl);
-    var key  = (typeof window._tlGetKey==='function') ? window._tlGetKey() : 'solome_tl3';
+    var key  = (typeof window._tlGetKey==='function') ? window._tlGetKey() : 'ARKA_tl3';
     localStorage.setItem(key, data);
-    localStorage.setItem('solome_tl3', data);
+    localStorage.setItem('ARKA_tl3', data);
   }catch(e){}
 }
 
@@ -5077,7 +5077,7 @@ function buildDirectionsUrl(destQuery){
   /* Try to get a stored user location for origin */
   var origin = '';
   try{
-    var ul = localStorage.getItem('solome_userloc');
+    var ul = localStorage.getItem('ARKA_userloc');
     if(ul){
       var loc = JSON.parse(ul);
       origin = '&origin='+encodeURIComponent(loc.lat+','+loc.lng);
@@ -5160,7 +5160,7 @@ window.tlOpenMapModal = function(chipId, dayId, chipName){
   /* Try to grab and store user geolocation silently for directions */
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(function(pos){
-      try{ localStorage.setItem('solome_userloc', JSON.stringify({lat:pos.coords.latitude.toFixed(6),lng:pos.coords.longitude.toFixed(6)})); }catch(e){}
+      try{ localStorage.setItem('ARKA_userloc', JSON.stringify({lat:pos.coords.latitude.toFixed(6),lng:pos.coords.longitude.toFixed(6)})); }catch(e){}
     }, function(){}, {timeout:5000, maximumAge:300000});
   }
 
@@ -5207,7 +5207,7 @@ window.tlMapGeolocate = function(){
   navigator.geolocation.getCurrentPosition(
     function(pos){
       var lat = pos.coords.latitude.toFixed(6), lng = pos.coords.longitude.toFixed(6);
-      try{ localStorage.setItem('solome_userloc', JSON.stringify({lat:lat,lng:lng})); }catch(e){}
+      try{ localStorage.setItem('ARKA_userloc', JSON.stringify({lat:lat,lng:lng})); }catch(e){}
       var q = lat+','+lng;
       var iframe = document.getElementById('tl-map-iframe');
       if(iframe){ iframe.style.opacity='0.35'; iframe.src='https://www.google.com/maps?q='+q+'&output=embed&hl=en&z=15'; iframe.onload=function(){ iframe.style.opacity='1'; }; }
