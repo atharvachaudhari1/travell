@@ -41,6 +41,18 @@ const GROQ_CHAIN = [
   { model: "groq/compound",       maxTokens: 2048 }, // most capable
 ];
 
+// Accept one key, numbered keys, or a comma-separated key list. Keys never
+// leave this server; the browser only receives the generated response.
+function getGroqKeys() {
+  const configured = [];
+  if (process.env.GROQ_API_KEYS) configured.push(...process.env.GROQ_API_KEYS.split(","));
+  Object.entries(process.env)
+    .filter(([name]) => /^GROQ_API_KEY(?:_\d+)?$/.test(name))
+    .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+    .forEach(([, value]) => configured.push(value));
+  return [...new Set(configured.map(key => String(key || "").trim()).filter(Boolean))];
+}
+
 // ── Place search cache ─────────────────────────────────────────
 // OpenStreetMap's Nominatim service powers the TravelMe type-ahead.
 // A short cache keeps the UI fast and avoids repeated lookups while typing.
@@ -50,7 +62,7 @@ let lastPlaceSearchAt = 0;
 // ── Gemini ─────────────────────────────────────────────────────
 async function callGemini(prompt, isJson) {
   const key = process.env.GEMINI_API_KEY;
-  if (!key) throw Object.assign(new Error("Missing GEMINI_API_KEY"), { status: 500 });
+  if (!key) throw Object.assign(new Error("Missing GEMINI_API_KEY"), { status: 500, code: "GEMINI_KEY_MISSING" });
 
   const r = await fetch(`${GEMINI_URL}?key=${encodeURIComponent(key)}`, {
     method: "POST",
@@ -118,8 +130,7 @@ function cleanGroqResponse(raw, isJson) {
 }
 
 // ── Single Groq model attempt ─────────────────────────────────
-async function callGroqModel(prompt, isJson, model, maxTokens) {
-  const key = process.env.GROQ_API_KEY;
+async function callGroqModel(prompt, isJson, model, maxTokens, key) {
   if (!key) throw Object.assign(new Error("Missing GROQ_API_KEY"), { status: 500 });
 
   const systemMsg = isJson
@@ -162,30 +173,31 @@ async function callGroqModel(prompt, isJson, model, maxTokens) {
 
 // ── Groq fallback chain — tries all models, respects TPM waits ─
 async function callGroqChain(prompt, isJson) {
-  if (!process.env.GROQ_API_KEY) {
+  const keys = getGroqKeys();
+  if (!keys.length) {
     throw Object.assign(new Error("No GROQ_API_KEY configured"), { status: 500 });
   }
 
-  for (const { model, maxTokens } of GROQ_CHAIN) {
-    try {
-      console.log(`   ⚡ Groq trying: ${model}`);
-      return await callGroqModel(prompt, isJson, model, maxTokens);
-    } catch (err) {
-      if (err.status === 429) {
-        // Parse the retry wait from Groq's error message ("try again in 7.66s")
-        const m = err.message?.match(/try again in ([\d.]+)s/i);
-        const waitMs = m ? Math.ceil(parseFloat(m[1]) * 1000) + 1000 : 9000;
-        console.warn(`   ⏳ ${model} TPM limited. Waiting ${waitMs}ms then trying next model...`);
-        await sleep(waitMs);
-        continue; // move to next model in chain
+  for (let keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+    const key = keys[keyIndex];
+    let rotateKey = false;
+    for (const { model, maxTokens } of GROQ_CHAIN) {
+      try {
+        console.log(`   ⚡ Groq key ${keyIndex + 1}/${keys.length} trying: ${model}`);
+        return await callGroqModel(prompt, isJson, model, maxTokens, key);
+      } catch (err) {
+        if (err.status === 429 || err.status === 401 || err.status === 403) {
+          console.warn(`   🔄 Groq key ${keyIndex + 1}/${keys.length} unavailable (${err.status}); rotating key.`);
+          rotateKey = true;
+          break;
+        }
+        console.warn(`   ⚠️  ${model} failed (${err.status || "?"}): ${err.message}`);
       }
-      // Any other error — log and try next model
-      console.warn(`   ⚠️  ${model} failed (${err.status || "?"}): ${err.message}`);
     }
+    if (rotateKey) continue;
   }
 
-  // All Groq models exhausted — return a graceful message instead of an error
-  console.error("All Groq models rate-limited. Returning graceful fallback.");
+  console.error("All configured Groq keys/models are unavailable. Returning graceful fallback.");
   return {
     text: "AI is currently experiencing high demand. Please wait a moment and try again.",
     model: "fallback-message",
@@ -201,8 +213,8 @@ async function callAI(prompt, isJson) {
   try {
     return await callGemini(prompt, isJson);
   } catch (err) {
-    if (RATE_LIMIT_STATUSES.has(err.status) && process.env.GROQ_API_KEY) {
-      console.warn(`⚡ Gemini ${err.status} — switching to Groq chain`);
+    if ((RATE_LIMIT_STATUSES.has(err.status) || err.code === "GEMINI_KEY_MISSING") && getGroqKeys().length) {
+      console.warn(`⚡ Gemini ${err.status || "unavailable"} — switching to Groq chain`);
       return await callGroqChain(prompt, isJson);
     }
     throw err; // non-rate-limit error: propagate
@@ -215,14 +227,16 @@ async function callAI(prompt, isJson) {
 app.get("/health", (_req, res) => res.json({
   ok: true,
   gemini: !!process.env.GEMINI_API_KEY,
-  groq:   !!process.env.GROQ_API_KEY,
+  groq:   getGroqKeys().length > 0,
+  groq_keys_configured: getGroqKeys().length,
   groq_chain: GROQ_CHAIN.map(m => m.model),
 }));
 
 // Debug status
 app.get("/status", (_req, res) => res.json({
   gemini_key:  process.env.GEMINI_API_KEY ? "set" : "missing",
-  groq_key:    process.env.GROQ_API_KEY   ? "set" : "missing",
+  groq_key:    getGroqKeys().length ? "set" : "missing",
+  groq_keys_configured: getGroqKeys().length,
   groq_models: GROQ_CHAIN.map(m => m.model),
   fallback_on: [...RATE_LIMIT_STATUSES],
 }));
@@ -346,11 +360,16 @@ app.get(/^\/(?!api\/).*/, (_req, res) => {
   res.sendFile(path.join(frontendDir, "index.html"));
 });
 
-// ── Start ──────────────────────────────────────────────────────
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`✅ AI proxy listening on :${PORT}`);
-  console.log(`   Primary:  Gemini (gemini-flash-latest)`);
-  console.log(`   Fallback: Groq chain → ${GROQ_CHAIN.map(m => m.model).join(" → ")}`);
-  console.log(`   Triggers: HTTP ${[...RATE_LIMIT_STATUSES].join(", ")} from Gemini`);
-});
+// Vercel imports the app as a serverless function. Local development starts
+// the same app as a normal Express server.
+export default app;
+
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`✅ AI proxy listening on :${PORT}`);
+    console.log(`   Primary:  Gemini (gemini-flash-latest)`);
+    console.log(`   Fallback: Groq chain → ${GROQ_CHAIN.map(m => m.model).join(" → ")}`);
+    console.log(`   Triggers: HTTP ${[...RATE_LIMIT_STATUSES].join(", ")} from Gemini`);
+  });
+}
