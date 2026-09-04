@@ -88,7 +88,7 @@ async function callGemini(prompt, isJson) {
   const data = await r.json();
   const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
   if (!text) throw Object.assign(new Error("Empty Gemini response"), { status: 502 });
-  return { text, model: "gemini-flash-latest" };
+  return { text: isJson ? validateJsonResponse(text, "Gemini") : text, model: "gemini-flash-latest" };
 }
 
 // ── Clean Groq reasoning artifacts ────────────────────────────
@@ -129,6 +129,21 @@ function cleanGroqResponse(raw, isJson) {
   return t;
 }
 
+// Do not allow malformed AI output to reach the frontend. JSON requests are
+// retried through the fallback chain instead of causing a client parse error.
+function validateJsonResponse(raw, provider) {
+  const text = cleanGroqResponse(raw, true);
+  try {
+    JSON.parse(text);
+    return text;
+  } catch {
+    throw Object.assign(new Error(`${provider} returned malformed JSON`), {
+      status: 502,
+      code: "AI_INVALID_JSON",
+    });
+  }
+}
+
 // ── Single Groq model attempt ─────────────────────────────────
 async function callGroqModel(prompt, isJson, model, maxTokens, key) {
   if (!key) throw Object.assign(new Error("Missing GROQ_API_KEY"), { status: 500 });
@@ -166,7 +181,7 @@ async function callGroqModel(prompt, isJson, model, maxTokens, key) {
   const raw  = data?.choices?.[0]?.message?.content;
   if (!raw) throw Object.assign(new Error(`Empty response from ${model}`), { status: 502 });
 
-  const text = cleanGroqResponse(raw, isJson);
+  const text = isJson ? validateJsonResponse(raw, model) : cleanGroqResponse(raw, false);
   console.log(`   ✅ ${model} responded (${raw.length} → ${text.length} chars after cleaning)`);
   return { text, model };
 }
@@ -197,11 +212,8 @@ async function callGroqChain(prompt, isJson) {
     if (rotateKey) continue;
   }
 
-  console.error("All configured Groq keys/models are unavailable. Returning graceful fallback.");
-  return {
-    text: "AI is currently experiencing high demand. Please wait a moment and try again.",
-    model: "fallback-message",
-  };
+  console.error("All configured Groq keys/models are unavailable.");
+  throw Object.assign(new Error("AI is temporarily unavailable. Please try again in a moment."), { status: 503 });
 }
 
 // ── Smart AI router ────────────────────────────────────────────
@@ -213,7 +225,7 @@ async function callAI(prompt, isJson) {
   try {
     return await callGemini(prompt, isJson);
   } catch (err) {
-    if ((RATE_LIMIT_STATUSES.has(err.status) || err.code === "GEMINI_KEY_MISSING") && getGroqKeys().length) {
+    if ((RATE_LIMIT_STATUSES.has(err.status) || err.code === "GEMINI_KEY_MISSING" || err.code === "AI_INVALID_JSON") && getGroqKeys().length) {
       console.warn(`⚡ Gemini ${err.status || "unavailable"} — switching to Groq chain`);
       return await callGroqChain(prompt, isJson);
     }
