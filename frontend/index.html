@@ -1136,6 +1136,9 @@ input,select,textarea{background:var(--card)!important;color:var(--text)!importa
 </nav>
 
 <div id="toast"></div>
+<div id="development-notice" role="status" aria-live="polite">
+  <div class="development-notice-card"><span class="development-notice-icon">🚧</span><div><strong>Work in development</strong><span>This feature is currently a preview.</span></div></div>
+</div>
 
 <!-- ─── PLANNER ─── -->
 <div id="page-planner" class="page">
@@ -2514,9 +2517,11 @@ function showPage(id){
   if(id==='wallet')updateWalletUI();
   if(id==='recommendations'&&state.plan){document.getElementById('reco-dest').value=state.plan.destination||'';document.getElementById('reco-budget').value=state.totalBudget||1500;}
   if(id==='language')updateTranslateBtn();
-  if(id==='rescue'&&window.arkaRescueRender)window.arkaRescueRender();
+  if(id==='rescue'){if(window.arkaRescueRender)window.arkaRescueRender();showRescueDevelopmentNotice();}
   if(id==='planner')renderTripCommandCenter();
 }
+let rescueNoticeTimer;
+function showRescueDevelopmentNotice(){const notice=document.getElementById('development-notice');if(!notice)return;clearTimeout(rescueNoticeTimer);notice.classList.add('show');rescueNoticeTimer=setTimeout(function(){notice.classList.remove('show');},3000);}
 function toggleDark(){state.dark=!state.dark;document.documentElement.classList.toggle('dark',state.dark);document.querySelector('.dark-toggle').textContent=state.dark?'☀️':'🌙';saveState();}
 function updateTripBadge(){const b=document.getElementById('trip-badge');if(state.plan){b.classList.remove('hidden');const dest=state.plan.destination||'';document.getElementById('trip-badge-text').textContent=dest.split('→')[0].trim()||dest;}else b.classList.add('hidden');}
 function renderTripCommandCenter(){
@@ -4564,7 +4569,7 @@ function toast(msg,type='success'){const el=document.createElement('div');el.cla
 .login-input,.login-input:focus{color:#fff!important;-webkit-text-fill-color:#fff!important;caret-color:#fff!important}
 input#si-username,input#si-password,input#su-name,input#su-username,input#su-password,input.login-input,input.login-input:focus{color:#fff!important;-webkit-text-fill-color:#fff!important;caret-color:#fff!important;opacity:1!important}
 input.login-input:-webkit-autofill,input.login-input:-webkit-autofill:hover,input.login-input:-webkit-autofill:focus{-webkit-text-fill-color:#fff!important;box-shadow:0 0 0 1000px #181818 inset!important;transition:background-color 9999s ease-out 0s}
-</style>
+#development-notice{position:fixed;z-index:12000;inset:0;display:grid;place-items:center;padding:24px;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease}#development-notice.show{opacity:1;visibility:visible}.development-notice-card{display:flex;align-items:center;gap:14px;min-width:min(390px,90vw);padding:18px 22px;border:2px solid #080808;border-radius:16px;background:#fffdf8;box-shadow:8px 8px 0 #f8bc16;color:#080808;transform:translateY(12px) scale(.98);transition:transform .25s ease}.show .development-notice-card{transform:translateY(0) scale(1)}.development-notice-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#f8bc16;font-size:21px;flex:0 0 42px}.development-notice-card strong{display:block;font:800 22px 'Barlow Condensed',sans-serif;letter-spacing:.03em;text-transform:uppercase}.development-notice-card span:not(.development-notice-icon){display:block;margin-top:2px;color:#585754;font-size:13px}</style>
 <div id="page-rescue" class="page"><div class="rescue-wrap" id="rescue-root"></div></div><div id="page-timeline" class="page mood-relax">
   <div class="tl-wrap">
     <div class="tl-header">
