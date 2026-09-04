@@ -985,9 +985,7 @@ input,select,textarea{background:var(--card)!important;color:var(--text)!importa
   <div class="login-card fade-in-anim" id="login-card">
     <!-- Brand -->
     <div class="login-logo">
-      <div class="login-logo-icon">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
-      </div>
+      <div class="login-logo-icon"><img class="brand-logo-img" src="assets/arka-logo.png" alt="ARKA logo"></div>
       <div class="login-brand-name">ARKA</div>
     </div>
     <div class="login-tagline">WHERE EVERY SOLO JOURNEY BEGINS.</div>
@@ -1089,9 +1087,7 @@ input,select,textarea{background:var(--card)!important;color:var(--text)!importa
 ═══════════════════════════════════════════════════════════ -->
 <nav id="main-nav">
   <div class="nav-logo" onclick="showPage('planner')">
-    <div class="nav-logo-icon">
-      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-    </div>
+    <div class="nav-logo-icon"><img class="brand-logo-img" src="assets/arka-logo.png" alt="ARKA logo"></div>
     <span class="nav-brand">ARKA</span>
   </div>
   <div class="nav-links">
@@ -4569,7 +4565,8 @@ function toast(msg,type='success'){const el=document.createElement('div');el.cla
 .login-input,.login-input:focus{color:#fff!important;-webkit-text-fill-color:#fff!important;caret-color:#fff!important}
 input#si-username,input#si-password,input#su-name,input#su-username,input#su-password,input.login-input,input.login-input:focus{color:#fff!important;-webkit-text-fill-color:#fff!important;caret-color:#fff!important;opacity:1!important}
 input.login-input:-webkit-autofill,input.login-input:-webkit-autofill:hover,input.login-input:-webkit-autofill:focus{-webkit-text-fill-color:#fff!important;box-shadow:0 0 0 1000px #181818 inset!important;transition:background-color 9999s ease-out 0s}
-#development-notice{position:fixed;z-index:12000;inset:0;display:grid;place-items:center;padding:24px;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease}#development-notice.show{opacity:1;visibility:visible}.development-notice-card{display:flex;align-items:center;gap:14px;min-width:min(390px,90vw);padding:18px 22px;border:2px solid #080808;border-radius:16px;background:#fffdf8;box-shadow:8px 8px 0 #f8bc16;color:#080808;transform:translateY(12px) scale(.98);transition:transform .25s ease}.show .development-notice-card{transform:translateY(0) scale(1)}.development-notice-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#f8bc16;font-size:21px;flex:0 0 42px}.development-notice-card strong{display:block;font:800 22px 'Barlow Condensed',sans-serif;letter-spacing:.03em;text-transform:uppercase}.development-notice-card span:not(.development-notice-icon){display:block;margin-top:2px;color:#585754;font-size:13px}</style>
+#development-notice{position:fixed;z-index:12000;inset:0;display:grid;place-items:center;padding:24px;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease}#development-notice.show{opacity:1;visibility:visible}.development-notice-card{display:flex;align-items:center;gap:14px;min-width:min(390px,90vw);padding:18px 22px;border:2px solid #080808;border-radius:16px;background:#fffdf8;box-shadow:8px 8px 0 #f8bc16;color:#080808;transform:translateY(12px) scale(.98);transition:transform .25s ease}.show .development-notice-card{transform:translateY(0) scale(1)}.development-notice-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#f8bc16;font-size:21px;flex:0 0 42px}.development-notice-card strong{display:block;font:800 22px 'Barlow Condensed',sans-serif;letter-spacing:.03em;text-transform:uppercase}.development-notice-card span:not(.development-notice-icon){display:block;margin-top:2px;color:#585754;font-size:13px}.nav-logo-icon,.login-logo-icon{overflow:hidden!important;background:transparent!important;border:0!important;box-shadow:none!important}.nav-logo-icon{width:42px!important;height:42px!important}.login-logo-icon{width:58px!important;height:58px!important}.brand-logo-img{display:block;width:100%;height:100%;object-fit:contain}.login-logo-icon .brand-logo-img{transform:scale(1.23)}
+</style>
 <div id="page-rescue" class="page"><div class="rescue-wrap" id="rescue-root"></div></div><div id="page-timeline" class="page mood-relax">
   <div class="tl-wrap">
     <div class="tl-header">
