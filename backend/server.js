@@ -8,6 +8,9 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+import { analyzeRescue, applyRecovery, listScenarios } from "./rescue-engine.js";
 
 const app = express();
 app.use(express.json({ limit: "1mb" }));
@@ -18,6 +21,12 @@ app.use(
     methods: ["GET", "POST", "OPTIONS"],
   })
 );
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const frontendDir = path.resolve(__dirname, "..", "frontend");
+
+app.use(express.static(frontendDir));
 
 // ── Constants ──────────────────────────────────────────────────
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent`;
@@ -31,6 +40,12 @@ const GROQ_CHAIN = [
   { model: "qwen/qwen3.6-27b",    maxTokens: 2048 }, // multilingual
   { model: "groq/compound",       maxTokens: 2048 }, // most capable
 ];
+
+// ── Place search cache ─────────────────────────────────────────
+// OpenStreetMap's Nominatim service powers the TravelMe type-ahead.
+// A short cache keeps the UI fast and avoids repeated lookups while typing.
+const placeSearchCache = new Map();
+let lastPlaceSearchAt = 0;
 
 // ── Gemini ─────────────────────────────────────────────────────
 async function callGemini(prompt, isJson) {
@@ -197,7 +212,7 @@ async function callAI(prompt, isJson) {
 // ── Routes ─────────────────────────────────────────────────────
 
 // Health check
-app.get("/", (_req, res) => res.json({
+app.get("/health", (_req, res) => res.json({
   ok: true,
   gemini: !!process.env.GEMINI_API_KEY,
   groq:   !!process.env.GROQ_API_KEY,
@@ -211,6 +226,58 @@ app.get("/status", (_req, res) => res.json({
   groq_models: GROQ_CHAIN.map(m => m.model),
   fallback_on: [...RATE_LIMIT_STATUSES],
 }));
+
+// Global destination / landmark search for TravelMe.
+app.get("/api/places/search", async (req, res) => {
+  const query = String(req.query.q || "").trim();
+  if (query.length < 2 || query.length > 100) {
+    return res.status(400).json({ error: "Search with 2–100 characters.", places: [] });
+  }
+
+  const key = query.toLowerCase();
+  const cached = placeSearchCache.get(key);
+  if (cached && Date.now() - cached.at < 15 * 60 * 1000) {
+    return res.json({ places: cached.places, cached: true });
+  }
+
+  try {
+    // Respect Nominatim's public-service rate guidance for uncached searches.
+    const waitMs = Math.max(0, 1050 - (Date.now() - lastPlaceSearchAt));
+    if (waitMs) await sleep(waitMs);
+    lastPlaceSearchAt = Date.now();
+
+    const url = new URL("https://nominatim.openstreetmap.org/search");
+    url.search = new URLSearchParams({
+      q: query,
+      format: "jsonv2",
+      addressdetails: "1",
+      dedupe: "1",
+      limit: "7",
+      "accept-language": "en",
+    }).toString();
+    const response = await fetch(url, {
+      headers: {
+        "Accept": "application/json",
+        "User-Agent": "ARKA Travel Planner/1.0",
+      },
+    });
+    if (!response.ok) throw new Error(`Place search service returned ${response.status}`);
+
+    const rows = await response.json();
+    const places = (Array.isArray(rows) ? rows : []).map((place) => ({
+      label: place.display_name,
+      name: place.name || place.display_name.split(",")[0],
+      type: place.type || place.category || "place",
+      lat: Number(place.lat),
+      lng: Number(place.lon),
+    }));
+    placeSearchCache.set(key, { at: Date.now(), places });
+    return res.json({ places });
+  } catch (err) {
+    console.warn("Place search failed:", err.message);
+    return res.status(502).json({ error: "Place search is temporarily unavailable.", places: [] });
+  }
+});
 
 // Main AI route
 app.post("/api/ai", async (req, res) => {
@@ -242,6 +309,41 @@ app.post("/gemini", async (req, res) => {
     console.error(`/gemini failed [${status}]:`, err.message);
     return res.status(status).json({ error: err.message || "AI request failed." });
   }
+});
+
+// ── ARKA Rescue — deterministic graph engine ──────────────────
+// Kept separate from /api/ai so disruption analysis remains available when
+// either AI provider is rate-limited or offline.
+app.get("/api/rescue/scenarios", (_req, res) => {
+  res.json({ scenarios: listScenarios() });
+});
+
+app.post("/api/rescue/analyze", (req, res) => {
+  try {
+    const result = analyzeRescue(req.body || {});
+    res.json(result);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message || "Rescue analysis failed." });
+  }
+});
+
+app.post("/api/rescue/apply", (req, res) => {
+  try {
+    const result = applyRecovery(req.body || {});
+    res.json(result);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message || "Recovery application failed." });
+  }
+});
+
+// Serve the web app from the same origin so mobile wrappers can
+// load the same site without a separate host.
+app.get("/", (_req, res) => {
+  res.sendFile(path.join(frontendDir, "index.html"));
+});
+
+app.get(/^\/(?!api\/).*/, (_req, res) => {
+  res.sendFile(path.join(frontendDir, "index.html"));
 });
 
 // ── Start ──────────────────────────────────────────────────────

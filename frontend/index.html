@@ -1,11 +1,13 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>WHERE EVERY SOLO JOURNEY BEGINS</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
-<!-- Leaflet removed: using self-contained SVG map renderer -->
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <style>
 :root{
   --navy:#0A1F44;--navy-mid:#122563;--navy-light:#1e3782;
@@ -125,6 +127,14 @@ body.app-ready{background:var(--bg);overflow:auto;}
   letter-spacing:.1em;text-transform:uppercase;transition:color .3s;padding:8px 12px;
 }
 .intro-skip:hover{color:rgba(255,255,255,0.6);}
+
+/* ═══ PHASE 2 — WARM JOURNEY ONBOARDING ═══ */
+.journey-intro{position:absolute;inset:0;z-index:3;overflow:hidden;background:linear-gradient(155deg,#97dcf4 0%,#d8f0f7 45%,#ffd1b6 100%);color:#102957;}
+.journey-intro:after{content:'';position:absolute;inset:auto -8% -28%;height:42%;background:radial-gradient(ellipse at center,#fff6df 0%,rgba(255,246,223,.7) 28%,transparent 67%);pointer-events:none}.journey-brand{position:absolute;top:7%;left:7%;display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-size:21px;letter-spacing:.08em;z-index:2}.journey-mark{display:grid;place-items:center;width:36px;height:36px;border-radius:13px;color:#fff;background:#f16f61;box-shadow:0 7px 14px rgba(241,111,97,.26)}.journey-copy{position:absolute;top:20%;left:50%;width:min(600px,86vw);transform:translateX(-50%);text-align:center;z-index:2}.journey-copy span{font-size:10px;font-weight:800;letter-spacing:.16em;color:#d85e57}.journey-copy h1{font-family:var(--font-display);font-size:clamp(35px,5vw,60px);line-height:1.04;margin:13px 0;color:#112a59}.journey-copy p{font-size:14px;line-height:1.6;color:#31537b;margin:auto;max-width:390px}.journey-route{position:absolute;z-index:2;left:50%;bottom:23%;width:min(650px,88vw);height:130px;transform:translateX(-50%);border-top:3px dashed rgba(29,97,158,.56);border-radius:50% 50% 0 0}.route-stop{position:absolute;width:14px;height:14px;top:-8px;border:3px solid #fff;border-radius:50%;background:#f16f61;box-shadow:0 2px 7px rgba(10,31,68,.2)}.route-stop.start{left:0}.route-stop.finish{right:0;background:#19a77b}.route-car,.route-train,.route-plane{position:absolute;font-size:27px;filter:drop-shadow(0 4px 4px rgba(10,31,68,.12))}.route-car{left:17%;top:-26px}.route-train{left:46%;top:-50px}.route-plane{right:15%;top:-79px;animation:journeyPlane 2.8s ease-in-out infinite}@keyframes journeyPlane{50%{transform:translate(11px,-8px) rotate(-7deg)}}.journey-sticker{position:absolute;z-index:2;font-size:clamp(31px,5vw,52px);filter:drop-shadow(0 9px 8px rgba(10,31,68,.12));animation:stickerFloat 3s ease-in-out infinite}.sticker-pack{left:11%;bottom:20%;animation-delay:-1s}.sticker-sun{right:12%;top:23%}.journey-cloud{position:absolute;color:rgba(255,255,255,.78);font-size:clamp(45px,7vw,86px);z-index:1;animation:cloudDrift 13s linear infinite}.cloud-one{left:6%;top:30%}.cloud-two{right:8%;bottom:29%;animation-delay:-7s}@keyframes stickerFloat{50%{transform:translateY(-10px) rotate(4deg)}}@keyframes cloudDrift{50%{transform:translateX(42px)}}#intro-screen #globe-canvas{display:none}#intro-screen .intro-brand{display:none}#intro-screen .intro-progress-wrap{bottom:11%;z-index:5;width:min(330px,70vw)}#intro-screen .intro-progress-track{height:7px;background:rgba(255,255,255,.7);box-shadow:inset 0 1px 2px rgba(10,31,68,.12)}#intro-screen .intro-progress-fill{background:linear-gradient(90deg,#f16f61,#f8bd45,#2a9fd4);box-shadow:none}#intro-screen .intro-progress-label{font-weight:700;letter-spacing:.08em;color:#31537b}#intro-screen .intro-skip{z-index:5;color:#31537b;font-weight:700}
+
+/* ═══ PHASE 2 — TRIP COMMAND CENTER ═══ */
+.command-center{display:grid;grid-template-columns:1.5fr repeat(3,.8fr);gap:12px;margin:0 0 18px}.cc-hero,.cc-stat{border-radius:18px;padding:16px;min-height:108px}.cc-hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#e6f7fc,#fff1e9);border:1px solid rgba(31,126,177,.16)}.cc-hero:after{content:'✈';position:absolute;right:17px;bottom:6px;font-size:50px;opacity:.16;transform:rotate(-15deg)}.cc-kicker{font-size:10px;letter-spacing:.12em;font-weight:800;color:#d85e57}.cc-title{font-family:var(--font-display);font-size:21px;line-height:1.15;color:var(--navy);margin:5px 0}.cc-sub{font-size:12px;color:var(--text-muted);max-width:410px}.cc-link{border:0;background:none;padding:0;margin-top:9px;color:#df635b;font:700 12px var(--font-body);cursor:pointer}.cc-stat{background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow)}.cc-icon{font-size:19px}.cc-value{font-family:var(--font-display);font-weight:700;font-size:19px;color:var(--text);margin-top:5px}.cc-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--text-faint);margin-top:2px}.cc-safe{color:#16865a}.cc-watch{color:#b57a07}
+@media(max-width:800px){.journey-copy{top:17%}.journey-route{bottom:26%}.sticker-pack{left:5%;bottom:26%}.sticker-sun{right:5%;top:18%}.command-center{grid-template-columns:1fr 1fr}.cc-hero{grid-column:1/-1}.cc-stat{min-height:88px}.cc-value{font-size:16px}}@media(prefers-reduced-motion:reduce){.route-plane,.journey-sticker,.journey-cloud{animation:none}}
 
 @keyframes introFadeOut{0%{opacity:1;transform:scale(1);}60%{opacity:1;transform:scale(1.04);}100%{opacity:0;transform:scale(1.08);pointer-events:none;}}
 @keyframes bmSlideIn{from{opacity:0;transform:translateY(28px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
@@ -897,6 +907,28 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
 .mc-smart-update-btn{padding:7px 14px;border-radius:9px;border:none;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-family:var(--font-body);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .mc-smart-update-btn:hover{filter:brightness(1.1);}
 
+/* ═══════════════════════════════════════════════════════════════
+   ARKA SIGNAL THEME — editorial utility system, inspired by supplied refs
+═══════════════════════════════════════════════════════════════ */
+:root{--navy:#080808;--navy-mid:#1b1b1b;--navy-light:#303030;--accent:#f8bc16;--accent-warm:#f8bc16;--accent-green:#07883f;--white:#fff;--bg:#f4f2ed;--bg2:#ebe8e0;--text:#080808;--text-muted:#585754;--text-faint:#817e77;--border:rgba(8,8,8,.2);--card:#fffdf8;--shadow:0 10px 25px rgba(8,8,8,.07);--shadow-md:0 18px 38px rgba(8,8,8,.12);--font-display:'Barlow Condensed',sans-serif;--font-body:'DM Sans',sans-serif;--radius:17px;--radius-sm:11px;}
+.dark{--navy:#f8bc16;--navy-mid:#e0a600;--navy-light:#ffe29b;--accent:#f8bc16;--accent-warm:#f8bc16;--accent-green:#44d77d;--bg:#090909;--bg2:#151515;--text:#f7f4ed;--text-muted:#b9b3a8;--text-faint:#78736b;--border:rgba(255,255,255,.17);--card:#101010;--shadow:0 12px 30px rgba(0,0,0,.38);--shadow-md:0 20px 50px rgba(0,0,0,.55);}
+body.app-ready{background:var(--bg);background-image:linear-gradient(rgba(8,8,8,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(8,8,8,.035) 1px,transparent 1px);background-size:28px 28px;}
+body.app-ready::before{content:'';position:fixed;pointer-events:none;inset:0;z-index:-1;background:radial-gradient(circle at 85% 10%,rgba(248,188,22,.15),transparent 22%),radial-gradient(circle at 5% 85%,rgba(248,188,22,.09),transparent 25%);}
+.journey-intro{background:radial-gradient(circle at 82% 75%,rgba(248,188,22,.2),transparent 19%),linear-gradient(rgba(8,8,8,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(8,8,8,.045) 1px,transparent 1px),#f4f2ed!important;background-size:auto,28px 28px,28px 28px,auto!important}.journey-intro:after{background:radial-gradient(ellipse at center,rgba(248,188,22,.22),transparent 66%)!important}.journey-brand,.journey-copy h1{color:#080808!important}.journey-mark{background:var(--accent)!important;color:#080808!important;border:2px solid #080808!important;box-shadow:4px 4px 0 #080808!important}.journey-copy span{color:#8b6400!important}.journey-copy p,.intro-progress-label{color:#4d4b45!important}.journey-route{border-color:#080808!important}.route-stop.start{background:var(--accent)!important;border-color:#080808!important}.route-stop.finish{background:#07883f!important;border-color:#080808!important}.journey-cloud{color:rgba(255,255,255,.9)!important;filter:drop-shadow(2px 2px 0 rgba(8,8,8,.1))}.intro-skip{color:#080808!important}.login-card{background:#101010!important;border:2px solid var(--accent)!important;border-radius:18px!important;box-shadow:8px 8px 0 var(--accent)!important}.login-logo-icon{background:var(--accent)!important;border-color:var(--accent)!important;border-radius:50%!important}.login-logo-icon svg{stroke:#080808!important}.login-brand-name,.login-heading{font-family:var(--font-display)!important;text-transform:uppercase;color:#fff!important}.login-brand-name{font-size:34px!important}.login-tagline{color:var(--accent)!important}.login-input{border-radius:8px!important;border-color:rgba(255,255,255,.25)!important;background:#181818!important}.login-input:focus{border-color:var(--accent)!important;box-shadow:0 0 0 3px rgba(248,188,22,.25)!important}.login-btn{background:var(--accent)!important;color:#080808!important;border:2px solid var(--accent)!important;border-radius:999px!important;box-shadow:none!important;font-family:'Space Grotesk',sans-serif!important;font-weight:800!important}.login-btn:hover{background:#fff!important;border-color:#fff!important}.auth-tabs{border:1px solid rgba(255,255,255,.2)!important;border-radius:999px!important}.auth-tab-slider{background:var(--accent)!important;border-color:var(--accent)!important;border-radius:999px!important}.auth-tab.active{color:#080808!important}.login-orb{display:none!important}
+#main-nav{height:72px;border-top:3px solid var(--text);border-bottom:1px solid var(--border);background:rgba(255,253,248,.94)!important;backdrop-filter:blur(18px);padding:0 clamp(16px,4vw,64px)!important;box-shadow:0 5px 18px rgba(8,8,8,.04)}.dark #main-nav{background:rgba(9,9,9,.94)!important}.nav-brand{font-family:var(--font-display)!important;font-size:30px!important;letter-spacing:.08em;color:var(--text)!important}.nav-logo-icon{background:var(--accent)!important;border-color:var(--text)!important;border-radius:50%!important}.nav-logo-icon svg{stroke:#080808!important}.nav-links{gap:5px!important}.nav-link{font:700 13px 'Space Grotesk',sans-serif!important;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)!important;border-radius:999px!important;padding:9px 12px!important}.nav-link:hover{background:rgba(248,188,22,.25)!important;color:var(--text)!important}.nav-link.active{background:#080808!important;color:#fff!important}.dark .nav-link.active{background:var(--accent)!important;color:#080808!important}.dark-toggle{border:1px solid var(--border)!important;background:var(--card)!important;border-radius:50%!important}
+.page{padding-top:88px!important}.page-header{position:relative;padding:0 4px 18px!important;border-bottom:2px solid var(--text)}.page-header::after{content:'ARKA / TRAVEL RESILIENCE';position:absolute;right:0;bottom:22px;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.15em;color:var(--text-faint)}.page-h1,.tl-header h1{font-family:var(--font-display)!important;text-transform:uppercase;font-size:clamp(36px,5vw,58px)!important;line-height:.9!important;letter-spacing:-.025em}.page-sub-text{font-size:14px!important;color:var(--text-muted)!important;margin-top:12px!important}.card,.card-sm,.rescue-card,.summary-card{background:var(--card)!important;border:2px solid var(--text)!important;border-radius:var(--radius)!important;box-shadow:6px 6px 0 rgba(8,8,8,.11)!important}.dark .card,.dark .card-sm,.dark .rescue-card,.dark .summary-card{box-shadow:6px 6px 0 rgba(248,188,22,.18)!important}.card-title,.card h2,.rescue-card h2,.info-box-title{font-family:var(--font-display)!important;text-transform:uppercase;letter-spacing:.035em}.card-title{font-size:24px!important}.card-sub{color:var(--text-muted)!important}.card-sub,.rescue-muted{font-size:13px!important}
+input,select,textarea{background:var(--card)!important;color:var(--text)!important;border:1.5px solid var(--border)!important;border-radius:10px!important}input:focus,select:focus,textarea:focus{border-color:var(--text)!important;box-shadow:0 0 0 3px rgba(248,188,22,.3)!important}.btn,.wiz-back,.rescue-demo,.plan-pick{font-family:'Space Grotesk',sans-serif!important;font-weight:700!important;letter-spacing:.035em;border-radius:999px!important}.btn-navy,.rescue-demo,.plan-pick{background:#080808!important;color:#fff!important;border:2px solid #080808!important;box-shadow:none!important}.btn-navy:hover,.rescue-demo:hover,.plan-pick:hover{background:var(--accent)!important;color:#080808!important;border-color:#080808!important;filter:none!important}.btn-blue{background:var(--accent)!important;color:#080808!important;border:2px solid #080808!important}.btn-outline,.wiz-back{border:2px solid var(--text)!important;color:var(--text)!important;background:transparent!important}.btn-outline:hover,.wiz-back:hover{background:var(--accent)!important;color:#080808!important}.pill.active,.style-pills .pill.active,.mc-leg-mode.active{background:var(--accent)!important;color:#080808!important;border-color:#080808!important;box-shadow:none!important}.pill:hover{border-color:var(--text)!important}
+.command-center{gap:14px!important;margin:20px 0 25px!important}.cc-hero,.cc-stat{border:2px solid var(--text)!important;border-radius:16px!important;box-shadow:5px 5px 0 rgba(8,8,8,.11)!important}.cc-hero{background:var(--accent)!important}.cc-hero:after{opacity:.3!important}.cc-kicker,.cc-label{font-family:'Space Grotesk',sans-serif!important;color:var(--text)!important}.cc-title,.cc-value{font-family:var(--font-display)!important;text-transform:uppercase}.cc-title{font-size:28px!important}.cc-link{color:var(--text)!important;font-family:'Space Grotesk',sans-serif!important;font-weight:800!important;text-decoration:underline}.cc-stat{background:var(--card)!important}.cc-safe{color:#057936!important}.cc-watch{color:#b04e00!important}
+.wiz-step-bar{background:var(--border)!important;border-radius:0!important}.wiz-step.done .wiz-step-bar,.wiz-step.active .wiz-step-bar{background:var(--accent)!important}.wiz-step.active .wiz-step-num,.wiz-step.done .wiz-step-num{background:#080808!important;color:var(--accent)!important}.wiz-heading{font-family:var(--font-display)!important;text-transform:uppercase;font-size:30px!important}.mc-route-builder::before{background:linear-gradient(to bottom,#080808 0 40%,var(--accent) 40% 100%)!important}.mc-stop-dot.origin,.mc-stop-dot.dest,.mc-stop-dot.end{box-shadow:none!important;border-color:#080808!important}.mc-stop-dot.origin{background:var(--accent)!important}.mc-stop-dot.dest{background:#07883f!important}.mc-stop-dot.end{background:#ee4f3f!important}.mc-leg{border-color:var(--border)!important;background:var(--bg2)!important}.mc-route-bar{background:#080808!important;border:2px solid #080808!important}.mc-budget-bar{border:2px solid var(--text)!important;background:var(--card)!important}
+.route-summary-bar,.plan-header{border:2px solid #080808!important;box-shadow:6px 6px 0 rgba(8,8,8,.11)!important}.plan-header{background:linear-gradient(115deg,#080808 0 72%,var(--accent) 72% 100%)!important}.plan-dest{font-family:var(--font-display)!important;text-transform:uppercase;letter-spacing:.02em}.day-card,.travel-info-card,.nearby-card,.reco-card{border:1.5px solid var(--border)!important;box-shadow:none!important;border-radius:14px!important}.day-card:hover,.reco-card:hover{border-color:var(--text)!important}.day-header{background:var(--bg2)!important}.day-num{background:var(--accent)!important;color:#080808!important;border:2px solid #080808!important}.quick-btn{border:2px solid var(--text)!important;border-radius:14px!important;background:var(--card)!important;box-shadow:4px 4px 0 rgba(8,8,8,.1)!important}.quick-btn:hover{transform:translate(-2px,-2px)!important;box-shadow:7px 7px 0 var(--accent)!important}.status-badge,.nearby-card-badge,.reco-tag{background:rgba(248,188,22,.23)!important;color:var(--text)!important;border:1px solid var(--text)!important}
+.rescue-wrap{max-width:1260px!important}.rescue-hero{background:#080808!important;border:2px solid #080808!important;border-radius:20px!important;box-shadow:8px 8px 0 var(--accent)!important}.rescue-hero:before{content:'ARKA // SIGNAL';position:absolute;right:28px;top:25px;font:700 10px 'Space Grotesk',sans-serif;letter-spacing:.16em;color:var(--accent)}.rescue-hero:after{border-color:rgba(248,188,22,.3)!important}.rescue-kicker{color:var(--accent)!important}.rescue-title{font-family:var(--font-display)!important;text-transform:uppercase;font-size:clamp(42px,6vw,68px)!important;letter-spacing:-.02em}.rescue-route{border-color:var(--accent)!important}.rescue-plane{filter:none!important}.rescue-card{box-shadow:5px 5px 0 rgba(8,8,8,.12)!important}.rescue-actions{grid-template-columns:repeat(5,1fr)!important}.rescue-action{border:1.5px solid var(--text)!important;border-radius:12px!important;background:var(--card)!important;color:var(--text)!important;font-family:'Space Grotesk',sans-serif!important}.rescue-action:hover,.rescue-action.active{border-color:#080808!important;background:var(--accent)!important;transform:translateY(-2px)!important}.rescue-status{color:#c14635!important}.rescue-node{border:1.5px solid var(--text)!important;border-radius:10px!important;background:var(--card)!important}.rescue-node:not(:last-child):after{color:var(--accent)!important}.node-risk{border-radius:3px!important}.node-risk.safe{background:#cdf4dc!important;color:#075e30!important}.node-risk.risk{background:#ffe7a2!important;color:#6d4800!important}.node-risk.cancelled{background:#ffd9d3!important;color:#8e1d18!important}.impact-item{background:var(--card)!important;border:1.5px solid var(--text)!important;border-left:6px solid var(--accent)!important}.impact-item.cancelled{border-left-color:#e94736!important}.impact-item.safe{border-left-color:#07883f!important}.rescue-plan{border:2px solid var(--text)!important;border-radius:14px!important;box-shadow:4px 4px 0 rgba(8,8,8,.1)!important}.rescue-plan.recommended{border-color:#080808!important;background:#fff1c8!important;box-shadow:6px 6px 0 var(--accent)!important}.plan-tag{color:#9b6900!important}.plan-name,.plan-price{font-family:var(--font-display)!important;text-transform:uppercase}.plan-name{font-size:25px!important}.rescue-explain{border-left:4px solid var(--accent)!important;background:var(--bg2)!important;border-radius:0!important}.rescue-success{border-radius:12px!important;background:#d5f6df!important;color:#063c20!important}
+#page-timeline{background:#0b0b0b!important;color:#f7f4ed!important}.tl-wrap{max-width:1260px!important}.tl-header h1{color:#fff!important}.tl-header p{color:#b9b3a8!important}.tl-toolbar,.tl-summary{border-color:rgba(255,255,255,.24)!important;background:#151515!important;border-radius:14px!important}.tl-dest-input,.tl-custom-input{background:#101010!important;border-color:rgba(255,255,255,.25)!important;color:#fff!important}.tl-add-day-btn,.tl-custom-btn{background:var(--accent)!important;color:#080808!important;border:1px solid var(--accent)!important;border-radius:999px!important;font-family:'Space Grotesk',sans-serif!important;font-weight:800!important}.tl-palette,.tl-day-card{background:#111!important;border:1px solid rgba(255,255,255,.2)!important;border-radius:14px!important}.tl-day-header{border-bottom-color:rgba(255,255,255,.16)!important}.tl-chip{background:#191919!important;border-color:rgba(255,255,255,.15)!important}.tl-chip:hover{background:#222!important}.tl-summary-val{color:var(--accent)!important}.tl-map-box{background:#0b0b0b!important;border-color:var(--accent)!important}
+/* Timeline returns to the shared light ARKA surface. */
+#page-timeline{background:var(--bg)!important;color:var(--text)!important}.tl-header h1,.tl-header h2,.tl-palette-title,.tl-custom-title{color:var(--text)!important}.tl-header p,.tl-day-sub,.tl-pal-cat,.tl-chip-meta,.tl-drop-zone,.tl-drag-hint{color:var(--text-muted)!important}.tl-toolbar,.tl-summary{background:var(--card)!important;border:2px solid var(--text)!important;box-shadow:5px 5px 0 rgba(8,8,8,.1)!important}.tl-dest-input,.tl-custom-input{background:#fffdf7!important;border:1.5px solid var(--border)!important;color:var(--text)!important}.tl-palette,.tl-day-card{background:var(--card)!important;border:1.5px solid var(--border)!important;box-shadow:4px 4px 0 rgba(8,8,8,.07)!important}.tl-day-header{background:linear-gradient(115deg,#080808 0 76%,var(--accent) 76% 100%)!important;border-bottom-color:#080808!important}.tl-day-label,.tl-day-sub{color:#fff!important}.tl-chip{background:var(--bg2)!important;border:1px solid var(--border)!important;color:var(--text)!important}.tl-chip:hover{background:#fff4cc!important;border-color:var(--text)!important}.tl-pal-item{background:#fffdf7!important;border-color:var(--border)!important}.tl-pal-item:hover{border-color:var(--text)!important;background:#fff4cc!important}.tl-pal-name,.tl-chip-name{color:var(--text)!important}.tl-day-num-badge{background:var(--accent)!important;color:#080808!important;border-color:var(--accent)!important}.tl-map-box{background:var(--card)!important;border:2px solid var(--text)!important}.tl-summary-val{color:#9b6900!important}
+.planner-welcome{position:relative;overflow:hidden;padding:clamp(28px,5vw,52px);background:var(--card);border:2px solid var(--text);border-radius:20px;box-shadow:8px 8px 0 var(--accent)}.planner-welcome:after{content:'';position:absolute;width:250px;height:250px;right:-110px;top:-110px;border:2px solid var(--accent);border-radius:50%;box-shadow:0 0 0 20px rgba(248,188,22,.13),0 0 0 42px rgba(248,188,22,.08)}.pw-kicker{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;font:800 11px 'Space Grotesk',sans-serif;letter-spacing:.14em;color:#765000}.pw-kicker:before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent)}.pw-title{position:relative;z-index:1;max-width:670px;margin:18px 0 14px;font:700 clamp(38px,5vw,64px)/.9 var(--font-display);letter-spacing:-.025em;text-transform:uppercase;color:#080808}.pw-title span{color:#b57a00}.pw-copy{position:relative;z-index:1;max-width:590px;margin:0;color:var(--text-muted);font-size:16px;line-height:1.65}.pw-actions{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:12px;margin:26px 0 34px}.pw-btn{padding:13px 18px;border:2px solid var(--text);border-radius:999px;background:#080808;color:#fff;font:800 12px 'Space Grotesk',sans-serif;letter-spacing:.06em;cursor:pointer;transition:.2s}.pw-btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--accent)}.pw-btn.alt{background:transparent;color:var(--text)}.pw-steps{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);border-left:1px solid var(--border)}.pw-step{padding:18px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(255,255,255,.48)}.pw-step-num{display:block;margin-bottom:9px;color:#b57a00;font:800 12px 'Space Grotesk',sans-serif;letter-spacing:.14em}.pw-step h3{margin:0 0 5px;color:var(--text);font:700 20px var(--font-display);text-transform:uppercase}.pw-step p{margin:0;color:var(--text-muted);font-size:12px;line-height:1.45}
+.tm-location-wrap{position:relative}.tm-place-suggestions{position:absolute;z-index:220;top:calc(100% + 6px);left:0;right:0;max-height:276px;overflow:auto;background:var(--card);border:2px solid var(--text);border-radius:12px;box-shadow:6px 6px 0 rgba(8,8,8,.14)}.tm-place-option{width:100%;display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:0;border-bottom:1px solid var(--border);background:transparent;color:var(--text);text-align:left;cursor:pointer;font-family:var(--font-body);transition:background .15s}.tm-place-option:last-child{border-bottom:0}.tm-place-option:hover,.tm-place-option.active{background:#fff1c8}.tm-place-icon{display:grid;place-items:center;width:28px;height:28px;flex:0 0 28px;border-radius:50%;background:var(--accent);font-size:13px}.tm-place-name{display:block;font-size:13px;font-weight:800;line-height:1.25}.tm-place-address{display:block;margin-top:3px;font-size:11px;line-height:1.35;color:var(--text-muted)}.tm-place-status{padding:12px;color:var(--text-muted);font-size:12px}.tm-location-wrap input{width:100%}
+@media(max-width:700px){.pw-steps{grid-template-columns:1fr}.planner-welcome{box-shadow:5px 5px 0 var(--accent)}.pw-title{font-size:42px}}
+@media(max-width:1000px){#main-nav{padding:0 16px!important}.page-header::after{display:none}.rescue-actions{grid-template-columns:repeat(3,1fr)!important}}@media(max-width:700px){.page{padding-top:76px!important}.page-h1{font-size:40px!important}.card{padding:18px!important}.rescue-actions{grid-template-columns:repeat(2,1fr)!important}.rescue-hero{padding:24px!important}.rescue-hero:before{display:none}.journey-brand{left:20px!important}.journey-copy h1{font-size:38px!important}.journey-copy{top:18%!important}.journey-route{width:80vw!important}.nav-brand{font-size:24px!important}}
 </style>
 </head>
 <body>
@@ -906,6 +938,14 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
 ═══════════════════════════════════════════════════════════ -->
 <div id="intro-screen">
   <canvas id="stars-canvas"></canvas>
+
+  <div class="journey-intro" aria-label="ARKA journey loading">
+    <div class="journey-cloud cloud-one">☁️</div><div class="journey-cloud cloud-two">☁️</div>
+    <div class="journey-sticker sticker-pack">🎒</div><div class="journey-sticker sticker-sun">☀️</div>
+    <div class="journey-brand"><span class="journey-mark">A</span><b>ARKA</b></div>
+    <div class="journey-copy"><span>YOUR TRAVEL COPILOT</span><h1>Where every journey<br>finds its way.</h1><p>Planning, protecting, and rebuilding the moments that matter.</p></div>
+    <div class="journey-route" aria-hidden="true"><span class="route-stop start"></span><span class="route-car">🚕</span><span class="route-train">🚆</span><span class="route-plane">✈️</span><span class="route-stop finish"></span></div>
+  </div>
 
   <div class="intro-brand">
     <div class="intro-tagline">WHERE EVERY SOLO JOURNEY BEGINS</div>
@@ -1061,6 +1101,7 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
     <button class="nav-link" id="nav-language" onclick="showPage('language')">🌐 Translate</button>
     <button class="nav-link" id="nav-travelme" onclick="showPage('travelme')">🛺 TravelMe</button>
     <button class="nav-link" id="nav-timeline" onclick="showPage('timeline')">🗓️ Timeline</button>
+    <button class="nav-link" id="nav-rescue" onclick="showPage('rescue')">🛡️ Rescue</button>
   </div>
   <div class="nav-right">
     <div id="trip-badge" class="trip-badge hidden" onclick="showPage('planner')">
@@ -1106,6 +1147,7 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
       </div>
     </div>
   </div>
+  <section class="command-center" id="trip-command-center" aria-label="Trip command center"></section>
   <div class="planner-layout">
     <div>
       <div id="trip-form" class="card">
@@ -1248,56 +1290,19 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
       </div>
     </div>
     <div id="plan-display">
-      <div class="empty-state" style="padding:0;display:block;">
-        <div style="text-align:center;padding:32px 24px 20px;">
-          <div style="font-size:28px;margin-bottom:10px;">✨</div>
-          <div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px;">Ready to plan your journey?</div>
-          <div style="font-size:13px;color:var(--text-muted);max-width:340px;margin:0 auto 24px;line-height:1.6;">Fill in your destination, budget, and interests — AI will craft a perfect itinerary in seconds.</div>
+      <div class="planner-welcome">
+        <div class="pw-kicker">Your journey, clearly organised</div>
+        <h2 class="pw-title">Plan with confidence.<br><span>Travel with a backup.</span></h2>
+        <p class="pw-copy">Start with a destination and ARKA turns your preferences, timing, and budget into a practical itinerary. If plans change, Rescue helps you find the next best move.</p>
+        <div class="pw-actions">
+          <button class="pw-btn" onclick="document.getElementById('trip-form').scrollIntoView({behavior:'smooth',block:'center'})">Start planning →</button>
+          <button class="pw-btn alt" onclick="showPage('rescue')">Explore Rescue</button>
         </div>
-        <!-- 2×2 Destination Image Grid -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 24px 28px;max-width:640px;margin:0 auto;">
-          <div style="position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="mcQuickAddCity('Tokyo, Japan')">
-            <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=500&q=80" alt="Tokyo" style="width:100%;height:100%;object-fit:cover;transition:transform .4s;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
-            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(4,12,30,.75) 0%,transparent 55%);"></div>
-            <div style="position:absolute;bottom:12px;left:14px;">
-              <div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.6);text-transform:uppercase;">Asia</div>
-              <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;">Tokyo</div>
-            </div>
-            <div style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.2);">🇯🇵 Japan</div>
-            <div style="position:absolute;top:10px;left:10px;background:rgba(79,142,247,0.85);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:#fff;">+ Add</div>
-          </div>
-          <div style="position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="mcQuickAddCity('Paris, France')">
-            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&q=80" alt="Paris" style="width:100%;height:100%;object-fit:cover;transition:transform .4s;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
-            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(4,12,30,.75) 0%,transparent 55%);"></div>
-            <div style="position:absolute;bottom:12px;left:14px;">
-              <div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.6);text-transform:uppercase;">Europe</div>
-              <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;">Paris</div>
-            </div>
-            <div style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.2);">🇫🇷 France</div>
-            <div style="position:absolute;top:10px;left:10px;background:rgba(79,142,247,0.85);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:#fff;">+ Add</div>
-          </div>
-          <div style="position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="mcQuickAddCity('Bali, Indonesia')">
-            <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=500&q=80" alt="Bali" style="width:100%;height:100%;object-fit:cover;transition:transform .4s;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
-            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(4,12,30,.75) 0%,transparent 55%);"></div>
-            <div style="position:absolute;bottom:12px;left:14px;">
-              <div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.6);text-transform:uppercase;">Southeast Asia</div>
-              <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;">Bali</div>
-            </div>
-            <div style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.2);">🇮🇩 Indonesia</div>
-            <div style="position:absolute;top:10px;left:10px;background:rgba(79,142,247,0.85);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:#fff;">+ Add</div>
-          </div>
-          <div style="position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="mcQuickAddCity('New York, USA')">
-            <img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=500&q=80" alt="New York" style="width:100%;height:100%;object-fit:cover;transition:transform .4s;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
-            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(4,12,30,.75) 0%,transparent 55%);"></div>
-            <div style="position:absolute;bottom:12px;left:14px;">
-              <div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.6);text-transform:uppercase;">Americas</div>
-              <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;">New York</div>
-            </div>
-            <div style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.2);">🇺🇸 USA</div>
-            <div style="position:absolute;top:10px;left:10px;background:rgba(79,142,247,0.85);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:#fff;">+ Add</div>
-          </div>
+        <div class="pw-steps">
+          <div class="pw-step"><span class="pw-step-num">01 / ROUTE</span><h3>Tell us where</h3><p>Add your start, destination, dates, and way of travelling.</p></div>
+          <div class="pw-step"><span class="pw-step-num">02 / STYLE</span><h3>Make it yours</h3><p>Set your pace, interests, companion type, and budget.</p></div>
+          <div class="pw-step"><span class="pw-step-num">03 / GO</span><h3>Get moving</h3><p>Use your day-by-day plan, wallet, and live recovery support.</p></div>
         </div>
-        <div style="text-align:center;padding-bottom:24px;font-size:12px;color:var(--text-faint);">👆 Tap a destination to add it to your route</div>
       </div>
     </div>
   </div>
@@ -1415,8 +1420,8 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
       <div class="card-title" style="margin-bottom:4px">Your Route</div>
       <div class="card-sub">Enter pickup and drop locations</div>
       <div class="form-row form-group">
-        <div><label>Pickup Location</label><div class="input-icon-wrap"><span class="input-prefix-icon">📍</span><input type="text" id="tm-source" placeholder="e.g. Bandra Station, Mumbai"></div></div>
-        <div><label>Drop Location</label><div class="input-icon-wrap"><span class="input-prefix-icon">🏁</span><input type="text" id="tm-dest" placeholder="e.g. Juhu Beach, Mumbai"></div></div>
+        <div><label>Pickup Location</label><div class="tm-location-wrap"><div class="input-icon-wrap"><span class="input-prefix-icon">📍</span><input type="text" id="tm-source" autocomplete="off" placeholder="Search any place, landmark, or address"></div><div class="tm-place-suggestions hidden" id="tm-source-suggestions" role="listbox"></div></div></div>
+        <div><label>Drop Location</label><div class="tm-location-wrap"><div class="input-icon-wrap"><span class="input-prefix-icon">🏁</span><input type="text" id="tm-dest" autocomplete="off" placeholder="Search any place, landmark, or address"></div><div class="tm-place-suggestions hidden" id="tm-dest-suggestions" role="listbox"></div></div></div>
       </div>
       <button class="btn btn-navy btn-full" id="tm-go-btn" onclick="tmGetRoute()"><span id="tm-go-txt">🗺️ Show Route & Distance</span></button>
     </div>
@@ -2021,11 +2026,11 @@ input[type=range]{flex:1;accent-color:var(--navy);cursor:pointer;}
     const prog = Math.min(1, revCount);
     document.getElementById('intro-progress').style.width = (prog * 100) + '%';
     if(!revDone){
-      const msgs = ['Launching into orbit…','✈️ Circling the globe','First orbit complete…','Almost there…'];
+      const msgs = ['Finding your route…','✈️ Connecting your journey…','Checking what matters…','Almost ready…'];
       const mi   = Math.min(msgs.length-1, Math.floor(prog * msgs.length));
       document.getElementById('intro-progress-label').textContent = msgs[mi];
     } else {
-      document.getElementById('intro-progress-label').textContent = 'Welcome aboard! 🎉';
+      document.getElementById('intro-progress-label').textContent = 'Journey ready! 🎉';
     }
 
     requestAnimationFrame(frame);
@@ -2263,6 +2268,7 @@ function enterApp(username, name){
       if(userData.totalBudget) state.totalBudget = userData.totalBudget;
       if(userData.currency) state.currency = userData.currency;
       if(userData.tripInput) state.tripInput = userData.tripInput;
+      if(userData.rescue) state.rescue = userData.rescue;
       if(userData.dark !== undefined){ state.dark = userData.dark; document.documentElement.classList.toggle('dark',state.dark); document.querySelector('.dark-toggle').textContent=state.dark?'☀️':'🌙'; }
       if(state.plan) updateTripBadge();
       updateWalletUI();
@@ -2396,18 +2402,17 @@ function skipIntro(){
 
 const state={
   dark:false,plan:null,tripInput:null,expenses:[],totalBudget:0,
-  currency:'INR',recoData:null,activeRecoTab:'hotels',
+  currency:'INR',recoData:null,activeRecoTab:'hotels',rescue:null,
   selectedLang:{code:'es',name:'Spanish'},travelStyle:'balanced',interests:[],
   isGenerating:false,transportMode:'train',mapInstance:null
 };
-let GEMINI_KEY='AIzaSyArQkb-d3U6k-TtgAXTpK-oqnQTu8PsArk';
 const CAT_COLORS={food:'#f7934f',transport:'#4f8ef7',accommodation:'#a78bfa',activity:'#34d399',shopping:'#f472b6',other:'#94a3b8'};
 const CAT_EMOJI={food:'🍽️',transport:'🚌',accommodation:'🏨',activity:'🎭',shopping:'🛍️',other:'💼'};
 const TRANSPORT_EMOJI={train:'🚂',airways:'✈️',bus:'🚌',ship:'🚢',bike:'🏍️',cab:'🚕',auto:'🛺'};
 
 function fmtCurrency(n,cur){cur=cur||state.currency;try{return new Intl.NumberFormat('en-IN',{style:'currency',currency:cur,minimumFractionDigits:0,maximumFractionDigits:0}).format(n);}catch{return cur+' '+Math.round(n);}}
 function fmtDate(dateStr){if(!dateStr)return '';try{const d=new Date(dateStr);return d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch{return dateStr;}}
-function saveState(){try{localStorage.setItem('ARKA',JSON.stringify({plan:state.plan,expenses:state.expenses,totalBudget:state.totalBudget,currency:state.currency,tripInput:state.tripInput,dark:state.dark,transportMode:state.transportMode}));const session=authGetSession();if(session)authSaveUserData(session,{plan:state.plan,expenses:state.expenses,totalBudget:state.totalBudget,currency:state.currency,tripInput:state.tripInput,dark:state.dark,transportMode:state.transportMode});}catch{}}
+function saveState(){try{localStorage.setItem('ARKA',JSON.stringify({plan:state.plan,expenses:state.expenses,totalBudget:state.totalBudget,currency:state.currency,tripInput:state.tripInput,dark:state.dark,transportMode:state.transportMode,rescue:state.rescue}));const session=authGetSession();if(session)authSaveUserData(session,{plan:state.plan,expenses:state.expenses,totalBudget:state.totalBudget,currency:state.currency,tripInput:state.tripInput,dark:state.dark,transportMode:state.transportMode,rescue:state.rescue});}catch{}}
 function loadState(){
   try{
     // Only load if no per-user session (legacy fallback)
@@ -2418,6 +2423,7 @@ function loadState(){
     if(s.totalBudget)state.totalBudget=s.totalBudget;
     if(s.currency)state.currency=s.currency;
     if(s.tripInput)state.tripInput=s.tripInput;
+    if(s.rescue)state.rescue=s.rescue;
     if(s.transportMode){state.transportMode=s.transportMode;restoreTransportUI();}
     if(s.dark){state.dark=true;document.documentElement.classList.add('dark');document.querySelector('.dark-toggle').textContent='☀️';}
     const today=new Date().toISOString().split('T')[0];
@@ -2428,10 +2434,43 @@ function restoreTransportUI(){
   document.querySelectorAll('.transport-btn').forEach(b=>{b.classList.toggle('active',b.dataset.mode===state.transportMode);});
 }
 loadState();
+renderTripCommandCenter();
 
 // ─ TravelMe ─
 const TM_RATES={auto:{min:10,max:20,label:'Auto'},bus:{min:5,max:15,label:'Bus'},cab:{min:12,max:25,label:'Cab'},bike:{min:8,max:15,label:'Bike'}};
 let tmMapInstance=null,tmMode='auto';
+function tmEscapeHtml(value){return String(value||'').replace(/[&<>'"]/g,function(char){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char];});}
+async function tmRenderRouteMap(mapDiv,srcGeo,dstGeo,src,dst){
+  if(!window.L){mapDiv.innerHTML='<div style="height:100%;display:grid;place-items:center;color:var(--text-muted);font-size:13px">Map is loading — please try the route again.</div>';return;}
+  if(tmMapInstance){try{tmMapInstance.remove();}catch{}tmMapInstance=null;}
+  mapDiv.innerHTML='';
+  const map=window.L.map(mapDiv,{zoomControl:true,scrollWheelZoom:true}).setView([(srcGeo.lat+dstGeo.lat)/2,(srcGeo.lng+dstGeo.lng)/2],13);
+  tmMapInstance=map;
+  window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:19,crossOrigin:true}).addTo(map);
+  const pickupIcon=window.L.divIcon({className:'',iconSize:[34,42],iconAnchor:[17,42],html:'<div style="display:grid;place-items:center;width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#080808;border:3px solid #f8bc16;box-shadow:0 2px 8px rgba(0,0,0,.32)"><span style="transform:rotate(45deg);font-size:14px">📍</span></div>'});
+  const dropIcon=window.L.divIcon({className:'',iconSize:[34,42],iconAnchor:[17,42],html:'<div style="display:grid;place-items:center;width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#07883f;border:3px solid #fffdf8;box-shadow:0 2px 8px rgba(0,0,0,.32)"><span style="transform:rotate(45deg);font-size:14px">🏁</span></div>'});
+  window.L.marker([srcGeo.lat,srcGeo.lng],{icon:pickupIcon}).addTo(map).bindPopup('<strong>Pickup</strong><br>'+tmEscapeHtml(src));
+  window.L.marker([dstGeo.lat,dstGeo.lng],{icon:dropIcon}).addTo(map).bindPopup('<strong>Drop</strong><br>'+tmEscapeHtml(dst));
+  const direct=[[srcGeo.lat,srcGeo.lng],[dstGeo.lat,dstGeo.lng]];
+  const routeLine=window.L.polyline(direct,{color:'#080808',weight:6,opacity:.9}).addTo(map);
+  const routeHighlight=window.L.polyline(direct,{color:'#f8bc16',weight:3,opacity:1,dashArray:'10 9'}).addTo(map);
+  map.fitBounds(direct,{padding:[38,38]});
+  try{
+    const response=await fetch('https://router.project-osrm.org/route/v1/driving/'+srcGeo.lng+','+srcGeo.lat+';'+dstGeo.lng+','+dstGeo.lat+'?overview=full&geometries=geojson');
+    const data=await response.json();
+    const road=data?.routes?.[0]?.geometry?.coordinates?.map(function(point){return [point[1],point[0]];});
+    if(road?.length&&tmMapInstance===map){routeLine.setLatLngs(road);routeHighlight.setLatLngs(road);map.fitBounds(road,{padding:[38,38]});}
+  }catch{}
+}
+const tmPlaceSearchState={};
+function tmClearPlaceSuggestions(id){const drop=document.getElementById(id+'-suggestions');if(drop){drop.classList.add('hidden');drop.replaceChildren();}const search=tmPlaceSearchState[id];if(search)search.places=[];}
+function tmPickPlace(id,place){const input=document.getElementById(id);if(!input)return;input.value=place.label;input.dataset.lat=place.lat;input.dataset.lng=place.lng;tmClearPlaceSuggestions(id);if(id==='tm-source')document.getElementById('tm-dest')?.focus();}
+function tmRenderPlaceSuggestions(id,places,message){const drop=document.getElementById(id+'-suggestions');if(!drop)return;drop.replaceChildren();const search=tmPlaceSearchState[id]||{};search.places=places||[];search.active=-1;tmPlaceSearchState[id]=search;if(message){const status=document.createElement('div');status.className='tm-place-status';status.textContent=message;drop.appendChild(status);}else{places.forEach(function(place,index){const option=document.createElement('button');option.type='button';option.className='tm-place-option';option.setAttribute('role','option');option.innerHTML='<span class="tm-place-icon">⌖</span><span><span class="tm-place-name"></span><span class="tm-place-address"></span></span>';option.querySelector('.tm-place-name').textContent=place.name;option.querySelector('.tm-place-address').textContent=place.label;option.addEventListener('mousedown',function(event){event.preventDefault();tmPickPlace(id,place);});drop.appendChild(option);});}drop.classList.remove('hidden');}
+async function tmSearchPlaces(id){const input=document.getElementById(id);const query=input?.value.trim()||'';if(query.length<2){tmClearPlaceSuggestions(id);return;}const search=tmPlaceSearchState[id]||{};if(search.controller)search.controller.abort();const controller=new AbortController();tmPlaceSearchState[id]={...search,controller,places:[],active:-1};tmRenderPlaceSuggestions(id,[],'Searching places…');try{const response=await fetch('/api/places/search?q='+encodeURIComponent(query),{signal:controller.signal});const data=await response.json();if(controller.signal.aborted||document.getElementById(id)?.value.trim()!==query)return;tmRenderPlaceSuggestions(id,data.places||[],data.places?.length?'':'No matches yet — keep typing or use your full address.');}catch(error){if(!controller.signal.aborted)tmRenderPlaceSuggestions(id,[],'Search is unavailable right now. You can still enter the full place name.');}}
+function tmWirePlaceAutocomplete(id){const input=document.getElementById(id);if(!input)return;let timer;input.addEventListener('input',function(){delete input.dataset.lat;delete input.dataset.lng;clearTimeout(timer);timer=setTimeout(function(){tmSearchPlaces(id);},280);});input.addEventListener('focus',function(){if(input.value.trim().length>=2)tmSearchPlaces(id);});input.addEventListener('blur',function(){setTimeout(function(){tmClearPlaceSuggestions(id);},180);});input.addEventListener('keydown',function(event){const search=tmPlaceSearchState[id],drop=document.getElementById(id+'-suggestions');if(!search?.places?.length||drop?.classList.contains('hidden'))return;if(event.key==='ArrowDown'||event.key==='ArrowUp'){event.preventDefault();search.active=(search.active+(event.key==='ArrowDown'?1:search.places.length-1))%search.places.length;drop.querySelectorAll('.tm-place-option').forEach(function(option,index){option.classList.toggle('active',index===search.active);});}else if(event.key==='Enter'&&search.active>=0){event.preventDefault();tmPickPlace(id,search.places[search.active]);}else if(event.key==='Escape'){tmClearPlaceSuggestions(id);}});}
+function tmLocationFromInput(id){const input=document.getElementById(id);if(input?.dataset.lat&&input.dataset.lng)return Promise.resolve({lat:Number(input.dataset.lat),lng:Number(input.dataset.lng)});return geocode(input?.value.trim()||'');}
+tmWirePlaceAutocomplete('tm-source');
+tmWirePlaceAutocomplete('tm-dest');
 function setTMMode(el){document.querySelectorAll('.travelme-mode-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');tmMode=el.dataset.tm;}
 async function tmGetRoute(){
   const src=document.getElementById('tm-source').value.trim(),dst=document.getElementById('tm-dest').value.trim();
@@ -2440,7 +2479,7 @@ async function tmGetRoute(){
   const btn=document.getElementById('tm-go-btn'),txt=document.getElementById('tm-go-txt');
   btn.disabled=true;txt.innerHTML='<span class="spinner"></span> Locating…';
   try{
-    const [srcGeo,dstGeo]=await Promise.all([geocode(src),geocode(dst)]);
+    const [srcGeo,dstGeo]=await Promise.all([tmLocationFromInput('tm-source'),tmLocationFromInput('tm-dest')]);
     if(!srcGeo){toast('Could not find pickup location','error');return;}
     if(!dstGeo){toast('Could not find drop location','error');return;}
     const R2=6371,dLat=(dstGeo.lat-srcGeo.lat)*Math.PI/180,dLon=(dstGeo.lng-srcGeo.lng)*Math.PI/180;
@@ -2458,18 +2497,8 @@ async function tmGetRoute(){
     window._tmRoute = { src, dst, distKm, timeStr, fareMin: Math.round(distKm*rate.min), fareMax: Math.round(distKm*rate.max), mode: tmMode, modeEmoji, rateLabel: rate.label };
     document.getElementById('tm-fare-card').innerHTML=`<div class="flex items-center gap-2 mb-3"><span style="font-size:20px">${modeEmoji}</span><span class="font-600">${rate.label} Fare Breakdown</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div style="background:var(--bg2);border-radius:10px;padding:12px;"><div style="font-size:11px;color:var(--text-faint);margin-bottom:4px">Rate per km</div><div style="font-weight:700">₹${rate.min}–₹${rate.max}/km</div></div><div style="background:var(--bg2);border-radius:10px;padding:12px;"><div style="font-size:11px;color:var(--text-faint);margin-bottom:4px">Total estimate</div><div style="font-weight:700;color:#10b981">${fareStr}</div></div></div><div style="margin-top:10px;font-size:12px;color:var(--text-faint);">💡 Fares are approximate. Final fare set by driver.</div><button onclick="openTMBooking()" style="margin-top:16px;width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#059669,#047857);color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .25s;box-shadow:0 4px 18px rgba(5,150,105,0.35);display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">${modeEmoji} Book ${rate.label} Now</button>`;
     const mapDiv=document.getElementById('tm-map');
-    if(tmMapInstance){try{tmMapInstance.remove();}catch{}tmMapInstance=null;}
-    mapDiv.innerHTML='';
-    const map=L.map(mapDiv).setView([(srcGeo.lat+dstGeo.lat)/2,(srcGeo.lng+dstGeo.lng)/2],13);
-    tmMapInstance=map;
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:19,crossOrigin:true}).addTo(map);
-    setTimeout(function(){var pane=map.getPanes().tilePane;if(pane)pane.style.filter='invert(1) hue-rotate(180deg) brightness(0.82) saturate(0.65)';},150);
-    const si=L.divIcon({html:`<div style="background:#0A1F44;color:white;width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3)"><span style="transform:rotate(45deg);font-size:12px">📍</span></div>`,className:'',iconSize:[28,28],iconAnchor:[14,28]});
-    const di=L.divIcon({html:`<div style="background:#10b981;color:white;width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3)"><span style="transform:rotate(45deg);font-size:12px">🏁</span></div>`,className:'',iconSize:[28,28],iconAnchor:[14,28]});
-    L.marker([srcGeo.lat,srcGeo.lng],{icon:si}).addTo(map).bindPopup(`<b>📍 ${src}</b>`).openPopup();
-    L.marker([dstGeo.lat,dstGeo.lng],{icon:di}).addTo(map).bindPopup(`<b>🏁 ${dst}</b>`);
-    L.polyline([[srcGeo.lat,srcGeo.lng],[dstGeo.lat,dstGeo.lng]],{color:'#4f8ef7',weight:4,dashArray:'8,6',opacity:0.85}).addTo(map);
-    map.fitBounds([[srcGeo.lat,srcGeo.lng],[dstGeo.lat,dstGeo.lng]],{padding:[36,36]});
+    tmMapInstance=null;
+    tmRenderRouteMap(mapDiv,srcGeo,dstGeo,src,dst);
     toast(`✅ Route found — ${distKm} km`);
   }catch(e){toast(e.message||'Route lookup failed','error');}
   finally{btn.disabled=false;txt.textContent='🗺️ Show Route & Distance';}
@@ -2485,17 +2514,36 @@ function showPage(id){
   if(id==='wallet')updateWalletUI();
   if(id==='recommendations'&&state.plan){document.getElementById('reco-dest').value=state.plan.destination||'';document.getElementById('reco-budget').value=state.totalBudget||1500;}
   if(id==='language')updateTranslateBtn();
+  if(id==='rescue'&&window.arkaRescueRender)window.arkaRescueRender();
+  if(id==='planner')renderTripCommandCenter();
 }
 function toggleDark(){state.dark=!state.dark;document.documentElement.classList.toggle('dark',state.dark);document.querySelector('.dark-toggle').textContent=state.dark?'☀️':'🌙';saveState();}
 function updateTripBadge(){const b=document.getElementById('trip-badge');if(state.plan){b.classList.remove('hidden');const dest=state.plan.destination||'';document.getElementById('trip-badge-text').textContent=dest.split('→')[0].trim()||dest;}else b.classList.add('hidden');}
+function renderTripCommandCenter(){
+  const el=document.getElementById('trip-command-center');if(!el)return;
+  const rescue=state.rescue||{},safe=!!rescue.applied,hasTrip=!!state.plan;
+  const destination=hasTrip?(state.plan.destination||state.tripInput?.destination||'Your next destination'):'Your next adventure starts here';
+  const budget=state.totalBudget?fmtCurrency(state.totalBudget):'Set a budget';
+  el.innerHTML=`<article class="cc-hero"><div class="cc-kicker">ARKA TRIP COMMAND CENTER</div><div class="cc-title">${destination}</div><div class="cc-sub">${hasTrip?'Your itinerary, bookings and travel tools are ready in one place.':'Build a personalized itinerary in three simple steps — ARKA will handle the details.'}</div><button class="cc-link" onclick="${hasTrip?"showPage('timeline')":"document.querySelector('#trip-form').scrollIntoView({behavior:'smooth'})"}">${hasTrip?'View itinerary →':'Start planning →'}</button></article><article class="cc-stat"><div class="cc-icon">🛡️</div><div class="cc-value ${safe?'cc-safe':rescue.scenario?'cc-watch':''}">${safe?'Recovered':rescue.scenario?'Needs attention':'Trip protected'}</div><div class="cc-label">Journey health</div></article><article class="cc-stat"><div class="cc-icon">💳</div><div class="cc-value">${budget}</div><div class="cc-label">Travel budget</div></article><article class="cc-stat"><div class="cc-icon">📍</div><div class="cc-value">${hasTrip?'Itinerary ready':'No bookings yet'}</div><div class="cc-label">Trip status</div></article>`;
+}
 
 // ─ Transport ─
 function setTransport(el){document.querySelectorAll('.transport-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');state.transportMode=el.dataset.mode;saveState();}
 
 // ─ Gemini ─
-// Point this at YOUR deployed backend proxy (Render/Railway/Fly/Vercel).
-// Use '' to call a same-origin endpoint if frontend + backend share a host.
-const AI_BACKEND = 'http://localhost:3000';
+// Prefer a configured backend URL, then same-origin, then local dev fallback.
+function getApiBase(){
+  try{
+    const saved = localStorage.getItem('ARKA_API_BASE');
+    if (saved && saved.trim()) return saved.trim().replace(/\/+$/, '');
+  }catch{}
+  if (typeof window !== 'undefined' && window.__ARKA_API_BASE__ && String(window.__ARKA_API_BASE__).trim()) {
+    return String(window.__ARKA_API_BASE__).trim().replace(/\/+$/, '');
+  }
+  if (location && location.origin && location.origin !== 'null') return location.origin.replace(/\/+$/, '');
+  return 'http://localhost:3000';
+}
+const AI_BACKEND = getApiBase();
 async function callGemini(prompt, isJson){
   // No API key here anymore — the backend injects it from an env var.
   const r=await fetch(`${AI_BACKEND}/api/ai`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,isJson:!!isJson})});
@@ -2634,6 +2682,8 @@ window.suAdjDays = function(delta){
 
 function clearTrip(){if(!confirm('Clear your current trip plan?'))return;state.plan=null;state.multiPlan=null;state.tripInput=null;if(state.mapInstance){try{state.mapInstance.remove();}catch{}state.mapInstance=null;}document.getElementById('plan-display').innerHTML=`<div class="empty-state" style="padding:0;display:block;"><div style="text-align:center;padding:32px 24px 20px;"><div style="font-size:28px;margin-bottom:10px;">✨</div><div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px;">Ready to plan your journey?</div><div style="font-size:13px;color:var(--text-muted);max-width:340px;margin:0 auto 24px;line-height:1.6;">Fill in your destination, budget, and interests — AI will craft a perfect itinerary in seconds.</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 24px 28px;max-width:640px;margin:0 auto;"><div style="position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="mcQuickAddCity('Tokyo, Japan')"><img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=500&q=80" alt="Tokyo" style="width:100%;height:100%;object-fit:cover;"><div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(4,12,30,.75) 0%,transparent 55%);"></div><div style="position:absolute;bottom:12px;left:14px;"><div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.6);text-transform:uppercase;">Asia</div><div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;">Tokyo</div></div><div style="position:absolute;top:10px;left:10px;background:rgba(79,142,247,0.85);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:#fff;">+ Add</div></div><div style="position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="mcQuickAddCity('Paris, France')"><img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&q=80" alt="Paris" style="width:100%;height:100%;object-fit:cover;"><div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(4,12,30,.75) 0%,transparent 55%);"></div><div style="position:absolute;bottom:12px;left:14px;"><div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.6);text-transform:uppercase;">Europe</div><div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;">Paris</div></div><div style="position:absolute;top:10px;left:10px;background:rgba(79,142,247,0.85);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:#fff;">+ Add</div></div><div style="position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="mcQuickAddCity('Bali, Indonesia')"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=500&q=80" alt="Bali" style="width:100%;height:100%;object-fit:cover;"><div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(4,12,30,.75) 0%,transparent 55%);"></div><div style="position:absolute;bottom:12px;left:14px;"><div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.6);text-transform:uppercase;">Southeast Asia</div><div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;">Bali</div></div><div style="position:absolute;top:10px;left:10px;background:rgba(79,142,247,0.85);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:#fff;">+ Add</div></div><div style="position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;" onclick="mcQuickAddCity('New York, USA')"><img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=500&q=80" alt="New York" style="width:100%;height:100%;object-fit:cover;"><div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(4,12,30,.75) 0%,transparent 55%);"></div><div style="position:absolute;bottom:12px;left:14px;"><div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.6);text-transform:uppercase;">Americas</div><div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;">New York</div></div><div style="position:absolute;top:10px;left:10px;background:rgba(79,142,247,0.85);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:#fff;">+ Add</div></div></div><div style="text-align:center;padding-bottom:24px;font-size:12px;color:var(--text-faint);">👆 Tap a destination to add it to your route</div></div>`;document.getElementById('planner-action-row').classList.add('hidden');document.getElementById('quick-update').classList.add('hidden');document.getElementById('quick-links').classList.add('hidden');document.getElementById('trip-form').style.display='';updateTripBadge();saveState();toast('Trip cleared');}
 
+function plannerWelcomeMarkup(){return `<div class="planner-welcome"><div class="pw-kicker">Your journey, clearly organised</div><h2 class="pw-title">Plan with confidence.<br><span>Travel with a backup.</span></h2><p class="pw-copy">Start with a destination and ARKA turns your preferences, timing, and budget into a practical itinerary. If plans change, Rescue helps you find the next best move.</p><div class="pw-actions"><button class="pw-btn" onclick="document.getElementById('trip-form').scrollIntoView({behavior:'smooth',block:'center'})">Start planning →</button><button class="pw-btn alt" onclick="showPage('rescue')">Explore Rescue</button></div><div class="pw-steps"><div class="pw-step"><span class="pw-step-num">01 / ROUTE</span><h3>Tell us where</h3><p>Add your start, destination, dates, and way of travelling.</p></div><div class="pw-step"><span class="pw-step-num">02 / STYLE</span><h3>Make it yours</h3><p>Set your pace, interests, companion type, and budget.</p></div><div class="pw-step"><span class="pw-step-num">03 / GO</span><h3>Get moving</h3><p>Use your day-by-day plan, wallet, and live recovery support.</p></div></div></div>`;}
+function clearTrip(){if(!confirm('Clear your current trip plan?'))return;state.plan=null;state.multiPlan=null;state.tripInput=null;if(state.mapInstance){try{state.mapInstance.remove();}catch{}state.mapInstance=null;}document.getElementById('plan-display').innerHTML=plannerWelcomeMarkup();document.getElementById('planner-action-row').classList.add('hidden');document.getElementById('quick-update').classList.add('hidden');document.getElementById('quick-links').classList.add('hidden');document.getElementById('trip-form').style.display='';updateTripBadge();saveState();toast('Trip cleared');}
 function exportPlan(){ /* Export removed from planner section */ }
 function addDays(n){if(!state.plan)return;updatePlanWithChanges({duration:(state.tripInput?.duration||state.plan.totalDays)+n},'');}
 
@@ -2677,6 +2727,7 @@ function toggleDay(id){const body=document.getElementById('day-body-'+id),icon=d
 
 function renderPlan(){
   if(!state.plan)return;
+  renderTripCommandCenter();
   const p=state.plan;
   const tMode=p.transportMode||state.tripInput?.transportMode||'train';
   const tEmoji=TRANSPORT_EMOJI[tMode]||'🚗';
@@ -4508,7 +4559,10 @@ function toast(msg,type='success'){const el=document.createElement('div');el.cla
 <!-- ═══════════════════════════════════════════════════════════
      TRIP TIMELINE — DRAG & DROP PLANNER
 ═══════════════════════════════════════════════════════════ -->
-<div id="page-timeline" class="page mood-relax">
+<style>
+.rescue-wrap{max-width:1180px;margin:0 auto;padding:18px 0 52px;color:var(--text)}.rescue-hero{position:relative;overflow:hidden;padding:32px;border-radius:28px;background:linear-gradient(125deg,#102a63 0%,#196dba 53%,#76c9ee 100%);color:#fff;box-shadow:0 18px 48px rgba(24,91,166,.22)}.rescue-hero:after{content:'';position:absolute;width:340px;height:340px;border:36px solid rgba(255,255,255,.12);border-radius:50%;right:-100px;top:-170px}.rescue-kicker{font-size:11px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#ffdd75}.rescue-title{font-family:var(--font-display);font-size:clamp(28px,4vw,46px);line-height:1.05;margin:9px 0}.rescue-copy{max-width:560px;line-height:1.6;color:rgba(255,255,255,.85);font-size:14px}.rescue-route{position:absolute;right:32px;bottom:25px;width:300px;height:80px;border-top:2px dashed rgba(255,255,255,.55);border-radius:50%;transform:rotate(-7deg);opacity:.8}.rescue-plane{position:absolute;right:44px;bottom:44px;font-size:30px;animation:rescueFly 4s ease-in-out infinite}@keyframes rescueFly{50%{transform:translate(-185px,-28px) rotate(-8deg)}}.rescue-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:18px;margin-top:18px}.rescue-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:0 8px 24px rgba(10,31,68,.06)}.rescue-card h2{font-family:var(--font-display);font-size:20px;margin:0 0 5px}.rescue-muted{font-size:12px;color:var(--text-muted);line-height:1.55}.rescue-health{display:flex;align-items:center;gap:13px;padding:13px 0;border-bottom:1px solid var(--border)}.rescue-health:last-child{border-bottom:0}.health-dot{width:11px;height:11px;border-radius:50%;background:#34c98a;box-shadow:0 0 0 5px rgba(52,201,138,.13)}.health-dot.risk{background:#f4b63f;box-shadow:0 0 0 5px rgba(244,182,63,.14)}.health-dot.alert{background:#f26666;box-shadow:0 0 0 5px rgba(242,102,102,.14)}.rescue-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}.rescue-action{min-height:76px;padding:10px;border:1px solid var(--border);border-radius:14px;background:var(--bg);color:var(--text);font:600 12px var(--font-body);cursor:pointer;text-align:left;transition:.2s}.rescue-action:hover,.rescue-action.active{border-color:#f47b67;background:rgba(244,123,103,.1);transform:translateY(-2px)}.rescue-action span{display:block;font-size:20px;margin-bottom:4px}.rescue-demo{margin-top:12px;width:100%;padding:11px;border:0;border-radius:12px;background:linear-gradient(135deg,#f47b67,#e9586d);color:#fff;font:700 13px var(--font-body);cursor:pointer;box-shadow:0 5px 16px rgba(233,88,109,.25)}.rescue-section{margin-top:18px}.rescue-section-title{display:flex;justify-content:space-between;align-items:end;margin:0 2px 10px}.rescue-section-title h2{font-family:var(--font-display);font-size:22px;margin:0}.rescue-status{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#e25d61}.rescue-graph{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:24px 8px}.rescue-node{min-width:144px;position:relative;padding:14px 12px;border-radius:15px;border:1px solid var(--border);background:var(--bg);text-align:center}.rescue-node:not(:last-child):after{content:'→';position:absolute;right:-24px;top:41%;z-index:2;color:#5daee2;font-size:23px;font-weight:700}.rescue-node+.rescue-node{margin-left:42px}.rescue-node .node-icon{font-size:23px}.rescue-node .node-name{font-size:12px;font-weight:800;margin-top:5px}.rescue-node .node-time{font-size:11px;color:var(--text-muted);margin-top:3px}.node-risk{display:inline-block;margin-top:8px;padding:3px 7px;border-radius:20px;font-size:9px;font-weight:800;letter-spacing:.05em}.node-risk.safe{background:rgba(52,201,138,.14);color:#16865a}.node-risk.risk{background:rgba(244,182,63,.16);color:#a16800}.node-risk.cancelled{background:rgba(242,102,102,.14);color:#c2374b}.rescue-impact{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.impact-item{padding:14px;border-radius:14px;background:var(--bg);border-left:4px solid #f4b63f}.impact-item.cancelled{border-left-color:#f26666}.impact-item.safe{border-left-color:#34c98a}.impact-item b{display:block;font-size:12px;margin:5px 0}.impact-item small{color:var(--text-muted);font-size:11px}.rescue-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.rescue-plan{position:relative;border:1px solid var(--border);border-radius:18px;padding:18px;background:var(--card);overflow:hidden}.rescue-plan.recommended{border:2px solid #f47b67;box-shadow:0 10px 26px rgba(244,123,103,.15)}.plan-tag{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#ef695f}.plan-name{font-family:var(--font-display);font-size:20px;margin:5px 0}.plan-price{font-size:24px;font-weight:800;color:var(--text)}.plan-facts{display:grid;gap:7px;margin:13px 0;font-size:12px;color:var(--text-muted)}.plan-facts span{display:flex;justify-content:space-between}.plan-facts b{color:var(--text)}.plan-pick{width:100%;padding:10px;border:0;border-radius:10px;background:#173b78;color:#fff;font:700 12px var(--font-body);cursor:pointer}.recommended .plan-pick{background:linear-gradient(135deg,#f47b67,#e9586d)}.rescue-explain{margin-top:12px;padding:13px;border-radius:12px;background:rgba(84,176,224,.1);font-size:12px;color:var(--text-muted);line-height:1.5}.rescue-success{margin-top:18px;padding:18px;border-radius:16px;background:linear-gradient(135deg,rgba(52,201,138,.12),rgba(93,174,226,.12));border:1px solid rgba(52,201,138,.3);display:none}.rescue-success.show{display:block;animation:rescueIn .45s ease}@keyframes rescueIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}@media(max-width:800px){.rescue-wrap{padding:8px 0 32px}.rescue-hero{padding:24px}.rescue-route,.rescue-plane{display:none}.rescue-grid{grid-template-columns:1fr}.rescue-actions{grid-template-columns:repeat(2,1fr)}.rescue-impact,.rescue-plans{grid-template-columns:1fr}.rescue-node{min-width:130px}.nav-links{overflow-x:auto}.nav-link{white-space:nowrap}}@media(prefers-reduced-motion:reduce){.rescue-plane{animation:none}.rescue-action:hover{transform:none}}
+</style>
+<div id="page-rescue" class="page"><div class="rescue-wrap" id="rescue-root"></div></div><div id="page-timeline" class="page mood-relax">
   <div class="tl-wrap">
     <div class="tl-header">
       <h1>🗓️ Trip Timeline</h1>
@@ -5380,5 +5434,63 @@ document.addEventListener('keydown', function(e){
   </div>
 </div>
 
-</body>
+<script>
+/* SOLOME RESCUE — deterministic client-side disruption and recovery engine */
+(function(){
+  var scenarios={
+    flight:{icon:'✈️',label:'Flight cancelled',headline:'Flight cancelled',event:'Mumbai → Delhi flight',affected:'Airport transfer, hotel check-in and evening activity',plans:[['Cheapest',4200,'+5h','4 / 5','Medium',74],['Fastest',6800,'+1h','5 / 5','Low',88],['Least disruption',5100,'+2h','5 / 5','Low',93]]},
+    delay:{icon:'⏱️',label:'Flight delayed',headline:'Flight delayed by 3h 10m',event:'Mumbai → Delhi flight',affected:'Airport transfer and hotel check-in',plans:[['Cheapest',1800,'+3h','5 / 5','Medium',78],['Fastest',3400,'+1h','5 / 5','Low',90],['Least disruption',2600,'+2h','5 / 5','Low',94]]},
+    train:{icon:'🚆',label:'Train cancelled',headline:'Return train cancelled',event:'Delhi → Chandigarh train',affected:'Return connection and final transfer',plans:[['Cheapest',2200,'+4h','5 / 5','Medium',76],['Fastest',4900,'+1h','5 / 5','Low',89],['Least disruption',3700,'+2h','5 / 5','Low',92]]},
+    hotel:{icon:'🏨',label:'Hotel cancelled',headline:'Hotel booking cancelled',event:'Manali stay',affected:'Check-in and luggage transfer',plans:[['Cheapest',1300,'0h','5 / 5','Medium',73],['Fastest',3100,'0h','5 / 5','Low',88],['Least disruption',2400,'0h','5 / 5','Low',94]]},
+    weather:{icon:'🌧️',label:'Severe weather',headline:'Severe weather alert',event:'Manali day activity',affected:'Outdoor activity and local transport',plans:[['Cheapest',600,'+1h','4 / 5','Medium',75],['Fastest',1700,'0h','5 / 5','Low',86],['Least disruption',1200,'+1h','5 / 5','Low',91]]}
+  };
+  function get(){return state.rescue||{scenario:'flight',selected:2,applied:false};}
+  async function rescueRequest(path, body){
+    const response=await fetch(`${AI_BACKEND}${path}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const payload=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(payload.error||'Rescue service unavailable');
+    return payload;
+  }
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]});}
+  function eventNodes(r,s){var flight=s==='train'?{i:'🚆',n:'Return train',t:'17:20',k:'cancelled'}:{i:'✈️',n:'Flight to Delhi',t:s==='delay'?'20:10':'17:00',k:s==='weather'?'safe':(s==='hotel'?'safe':'cancelled')};return [flight,{i:'🚕',n:'Airport transfer',t:'18:00',k:(s==='flight'||s==='delay')?'risk':'safe'},{i:'🏨',n:'Hotel check-in',t:'20:00',k:(s==='flight'||s==='delay'||s==='hotel')?'risk':'safe'},{i:'🏔️',n:'Solang activity',t:'Next morning',k:s==='weather'?'risk':'safe'},{i:'🚆',n:'Return connection',t:'17:20',k:s==='train'?'risk':'safe'}];}
+  function render(){var root=document.getElementById('rescue-root');if(!root)return;var r=get(),d=scenarios[r.scenario]||scenarios.flight,analysis=r.analysis||null,nodes=analysis?analysis.nodes.map(function(n){return{i:n.icon,n:n.title,t:new Date(n.startTime).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),k:n.status==='delayed'?'risk':n.status};}):eventNodes(r,r.scenario),planData=analysis?analysis.plans.map(function(p){return[p.name,p.additionalCost,p.timeImpact,p.activitiesPreserved,p.risk,p.convenienceScore,p.id];}):d.plans,headline=analysis?analysis.headline:d.headline,selected=Math.max(0,Math.min(2,r.selected||0));root.innerHTML=`
+    <section class="rescue-hero"><div class="rescue-kicker">ARKA RESCUE · Demo mode</div><h1 class="rescue-title">Your trip's recovery agent.</h1><p class="rescue-copy">When a booking changes, ARKA maps what happens next, weighs real constraints, and gives you a calm, clear way forward.</p><div class="rescue-route"></div><div class="rescue-plane">✈️</div></section>
+    <div class="rescue-grid"><section class="rescue-card"><h2>Simulate a disruption</h2><p class="rescue-muted">Server-calculated dependency checks stay available even when the AI provider is unavailable.</p><div class="rescue-actions">${Object.keys(scenarios).map(k=>`<button class="rescue-action ${r.scenario===k?'active':''}" onclick="arkaRescueStart('${k}')"><span>${scenarios[k].icon}</span>${scenarios[k].label}</button>`).join('')}</div><button class="rescue-demo" ${r.loading?'disabled':''} onclick="arkaRescueStart('flight')">${r.loading?'Analyzing itinerary…':'▶ Run the Mumbai → Delhi → Manali demo'}</button></section><aside class="rescue-card"><h2>Trip health</h2><p class="rescue-muted">Live dependency check</p><div class="rescue-health"><i class="health-dot ${r.applied?'':'alert'}"></i><div><b>${r.applied?'RECOVERED':r.loading?'ANALYZING':'ACTION NEEDED'}</b><div class="rescue-muted">${r.applied?'Your itinerary is back on track.':'One disruption affects connected bookings.'}</div></div></div><div class="rescue-health"><i class="health-dot ${r.applied?'':'risk'}"></i><div><b>${r.applied?'0':analysis?.impacts.length||3} downstream risks</b><div class="rescue-muted">${r.applied?'No outstanding connection risks.':'Transfer, hotel and activity are checked.'}</div></div></div><div class="rescue-health"><i class="health-dot"></i><div><b>${analysis?.analyzedDependencies||7} dependencies analyzed</b><div class="rescue-muted">Times, booking flexibility and trip cost.</div></div></div></aside></div>
+    <section class="rescue-section rescue-card"><div class="rescue-section-title"><div><h2>Journey impact map</h2><p class="rescue-muted">Connected events update as the disruption changes.</p></div><span class="rescue-status">${r.applied?'Recovered':'● '+headline}</span></div><div class="rescue-graph">${nodes.map(x=>`<article class="rescue-node"><div class="node-icon">${x.i}</div><div class="node-name">${esc(x.n)}</div><div class="node-time">${x.t}</div><span class="node-risk ${r.applied?'safe':x.k}">${r.applied?'SAFE':x.k.toUpperCase()}</span></article>`).join('')}</div></section>
+    <section class="rescue-section"><div class="rescue-section-title"><div><h2>Impact analysis</h2><p class="rescue-muted">${analysis?.directEvent||d.event} changed. ARKA found downstream effects immediately.</p></div></div><div class="rescue-impact">${(analysis?.impacts||[{icon:d.icon,title:d.event,status:'cancelled',reason:headline},{icon:'🚕',title:'Airport transfer',status:'risk',reason:'Timing must be recalculated'},{icon:'🏨',title:'Hotel check-in',status:'risk',reason:d.affected}]).map(x=>`<article class="impact-item ${x.status==='cancelled'?'cancelled':''}"><small>${x.status==='cancelled'?'DIRECTLY AFFECTED':'DOWNSTREAM RISK'}</small><b>${x.icon} ${esc(x.title)}</b><small>${esc(x.reason)}</small></article>`).join('')}<article class="impact-item safe"><small>SAFE</small><b>🧳 Stored bookings</b><small>Nothing is changed until you approve</small></article></div></section>
+    <section class="rescue-section"><div class="rescue-section-title"><div><h2>Recovery plans</h2><p class="rescue-muted">The backend weighs cost, time, retained activities and traveler priority.</p></div></div><div class="rescue-plans">${planData.map((p,i)=>`<article class="rescue-plan ${selected===i?'recommended':''}"><div class="plan-tag">${selected===i?'Recommended for you':i===0?'Lowest cost':i===1?'Fastest arrival':'Most continuity'}</div><div class="plan-name">Plan ${String.fromCharCode(65+i)} · ${p[0]}</div><div class="plan-price">${fmtCurrency(p[1])}</div><div class="plan-facts"><span>Time impact <b>${p[2]}</b></span><span>Activities kept <b>${p[3]}</b></span><span>Risk <b>${p[4]}</b></span><span>Convenience <b>${p[5]} / 100</b></span></div><button class="plan-pick" onclick="arkaRescueChoose(${i})">${selected===i?'Choose this recovery':'Compare this plan'}</button></article>`).join('')}</div><div class="rescue-explain"><b>Why Plan ${String.fromCharCode(65+selected)}?</b> ${analysis?.explanation||`It preserves ${planData[selected][3]} activities, keeps your hotel where possible, and balances time impact with your comfort preference.`}</div>${r.applied?'<div class="rescue-success show"><b>✓ Journey recovered</b><div class="rescue-muted">Flight/booking alternative applied, transfer timing updated, and the affected itinerary is now safe to continue.</div></div>':`<button class="rescue-demo" style="max-width:310px;margin-top:16px" ${r.loading?'disabled':''} onclick="arkaRescueApply()">Approve Plan ${String.fromCharCode(65+selected)} & rebuild itinerary</button>`}</section>`;}
+  window.arkaRescueRender=render;
+  window.arkaRescueStart=async function(s){
+    state.rescue={scenario:s,selected:2,applied:false,loading:true};render();
+    try{
+      const analysis=await rescueRequest('/api/rescue/analyze',{scenario:{flight:'flight_cancelled',delay:'flight_delayed',train:'train_cancelled',hotel:'hotel_cancelled',weather:'severe_weather'}[s]||'flight_cancelled',preferences:{priority:'continuity'}});
+      const recommendedIndex=Math.max(0,analysis.plans.findIndex(function(plan){return plan.recommended;}));
+      state.rescue={scenario:s,selected:recommendedIndex,applied:false,analysis:analysis};saveState();render();renderTripCommandCenter();toast('ARKA mapped the disruption using the Rescue engine.');
+    }catch(error){
+      state.rescue={scenario:s,selected:2,applied:false};saveState();render();toast(error.message||'Rescue analysis failed','error');
+    }
+  };
+  window.arkaRescueChoose=function(i){var r=get();r.selected=i;r.applied=false;state.rescue=r;saveState();render();};
+  function rebuildTimeline(r){
+    var tl=window._TL;if(!tl)return;
+    if(!Array.isArray(tl.days)||!tl.days.length){tl.days=[{id:'d1',label:'Day 1 · Arrival',chips:[]},{id:'d2',label:'Day 2 · Manali',chips:[]},{id:'d3',label:'Day 3 · Return',chips:[]}];tl.nextDayId=4;}
+    if(!tl.destination)tl.destination='Delhi → Manali';
+    var d=scenarios[r.scenario]||scenarios.flight,plan=d.plans[r.selected||0];
+    tl.days.forEach(function(day){day.chips=(day.chips||[]).filter(function(chip){return !chip.arkaRecovery;});});
+    var arrival=tl.days[0];
+    arrival.chips.unshift({id:'arka-recovery-'+Date.now(),palId:'arka-recovery',emoji:'🛡️',name:'ARKA Recovery · Plan '+String.fromCharCode(65+(r.selected||0)),cat:'Recovered itinerary',color:'#10b981',time:r.selected===1?'18:00':'20:00',cost:String(plan[1]),notes:'Replacement confirmed after '+d.headline+'. '+plan[0]+' recovery selected; time impact '+plan[2]+'.',arkaRecovery:true});
+    if(typeof window._tlRender==='function')window._tlRender();
+  }
+  window.arkaRescueApply=async function(){
+    var r=get(),analysis=r.analysis;if(!analysis){toast('Analyze a disruption before applying a recovery plan.','error');return;}
+    r.loading=true;state.rescue=r;render();
+    try{
+      const plan=analysis.plans[r.selected];
+      const applied=await rescueRequest('/api/rescue/apply',{scenario:analysis.scenario,planId:plan.id,preferences:{priority:'continuity'}});
+      r.analysis=applied;rebuildTimeline(r);r.applied=true;r.loading=false;r.appliedAt=new Date().toISOString();state.rescue=r;saveState();render();renderTripCommandCenter();toast('✓ Server-approved recovery applied — Timeline rebuilt.');
+    }catch(error){r.loading=false;state.rescue=r;render();toast(error.message||'Recovery could not be applied','error');}
+  };
+  document.addEventListener('DOMContentLoaded',render);
+})();
+</script></body>
 </html>
